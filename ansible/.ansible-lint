@@ -1,0 +1,8 @@
+---
+warn_list:
+  - experimental
+  - yaml
+  - meta-no-info
+
+skip_list:
+  - jinja[spacing]

@@ -1,0 +1,18 @@
+---
+# production inventory for the ci-factory
+plugin: generator
+hosts:
+  name: "standard_{{ builder }}_{{ base }}"
+  parents:
+    - name: "{{ builder }}_{{ base }}"
+      parents:
+        - name: "{{ builder }}"
+        - name: "{{ base }}"
+
+layers:
+  builder:
+    - docker
+  base:
+    - node16
+    - node18
+    - node20

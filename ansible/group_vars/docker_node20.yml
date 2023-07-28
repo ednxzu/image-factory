@@ -1,2 +1,0 @@
----
-docker_base_image: "node:20-bookworm"

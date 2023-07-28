@@ -2,9 +2,11 @@
 # production inventory for the ci-factory
 plugin: generator
 hosts:
-  name: "renovate_{{ builder }}_{{ base }}"
+  name: "renovate_{{ builder }}_{{ base }}_{{ version }}"
   parents:
-    - name: "{{ builder }}_{{ base }}"
+    - name: "{{ builder }}_{{ base }}_{{ version }}"
+      parents:
+        - name: "{{ builder }}_{{ base }}"
       parents:
         - name: "{{ builder }}"
         - name: "{{ base }}"
@@ -13,5 +15,7 @@ layers:
   builder:
     - docker
   base:
-    - node18
-    - node20
+    - node
+  version:
+    - 18
+    - 20

@@ -2,17 +2,21 @@
 # production inventory for the ci-factory
 plugin: generator
 hosts:
-  name: "terraform_{{ builder }}_{{ base }}"
+  name: "terraform_{{ builder }}_{{ base }}_{{ version }}"
   parents:
-    - name: "{{ builder }}_{{ base }}"
+    - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
-        - name: "{{ builder }}"
-        - name: "{{ base }}"
+        - name: "{{ builder }}_{{ base }}"
+          parents:
+            - name: "{{ builder }}"
+            - name: "{{ base }}"
 
 layers:
   builder:
     - docker
   base:
-    - node16
-    - node18
-    - node20
+    - node
+  version:
+    - 16
+    - 18
+    - 20

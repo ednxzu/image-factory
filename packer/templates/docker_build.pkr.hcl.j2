@@ -1,0 +1,43 @@
+packer {
+  required_plugins {
+    docker = {
+      version = "{{ packer['builder_versions']['docker'] }}"
+      source  = "github.com/hashicorp/docker"
+    }
+    ansible = {
+      version = "{{ packer['provisioner_versions']['ansible'] }}"
+      source  = "github.com/hashicorp/ansible"
+    }
+  }
+}
+
+source "docker" "{{ inventory_hostname }}" {
+  image  = "{{ docker_base_image }}"
+  commit = true
+  login = false
+  run_command = ["-d", "-i", "-t", "--name", "{{ inventory_hostname }}", "{% raw %}{{.Image}}{% endraw %}", "{{ docker_run_command }}"]
+}
+
+build {
+  name = "{{ inventory_hostname }}"
+  sources = [
+    "source.docker.{{ inventory_hostname }}"
+  ]
+  provisioner "shell" {
+    environment_vars = [
+      "FOO=hello world",
+    ]
+    inline = [
+      "echo Adding file to Docker Container",
+      "echo \"FOO is $FOO\" > example.txt",
+    ]
+  }
+
+  # provisioner "ansible" {
+  #   ansible_env_vars = ["ANSIBLE_HOST_KEY_CHECKING=false"]
+  #   extra_arguments  = ["-e ansible_connection=docker", "-e ansible_python_interpreter=/usr/bin/python3", "-e ansible_host=standard_docker_node_18", "-e builder_type=docker", "-e target_host=standard_docker_node_18"]
+  #   inventory_file   = "../../ansible/inventory/production/standard-runners.yml"
+  #   playbook_file    = "../../ansible/01_test.yml"
+  #   user             = "root"
+  # }
+}

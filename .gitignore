@@ -2,3 +2,4 @@
 **/__pycache__
 # ignore roles (downloaded at runtime)
 **/roles/*/
+packer/builds/**/

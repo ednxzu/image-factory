@@ -1,3 +1,9 @@
 ---
 factory:
   root_dir: "{{ lookup('env', 'PWD') }}"
+
+packer:
+  builder_versions:
+    docker: "1.0.8"
+  provisioner_versions:
+    ansible: "1.1.0"

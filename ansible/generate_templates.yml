@@ -1,0 +1,31 @@
+---
+- name: test
+  hosts: docker
+  gather_facts: no
+  become: no
+  tasks:
+    - name: "Test inventory names"
+      ansible.builtin.debug:
+        msg: |
+          {{ inventory_hostname }}
+          {{ factory['root_dir'] }}
+          {{ docker_base_image }}
+      delegate_to: localhost
+
+    - name: "Create build directories in packer/builds"
+      ansible.builtin.file:
+        path: "{{ factory['root_dir'] }}/packer/builds/{{ inventory_hostname }}"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+
+    - name: "Generate build files"
+      ansible.builtin.template:
+        src: "{{ factory['root_dir'] }}/packer/templates/docker_build.pkr.hcl.j2"
+        dest: "{{ factory['root_dir'] }}/packer/builds/{{ inventory_hostname }}/{{ inventory_hostname }}.pkr.hcl"
+        mode: '0600'
+      delegate_to: localhost
+
+    # - name: "apt update"
+    #   ansible.builtin.apt:
+    #     update_cache: true

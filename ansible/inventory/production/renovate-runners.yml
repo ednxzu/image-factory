@@ -2,16 +2,20 @@
 # production inventory for the ci-factory
 plugin: generator
 hosts:
-  name: "renovate_{{ builder }}_{{ base }}_{{ version }}"
+  name: "{{ type }}_{{ builder }}_{{ base }}_{{ version }}"
   parents:
     - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
         - name: "{{ builder }}_{{ base }}"
-      parents:
-        - name: "{{ builder }}"
-        - name: "{{ base }}"
+          parents:
+            - name: "{{ builder }}"
+            - name: "{{ base }}"
 
 layers:
+  type:
+    - standard
+    - renovate
+    - terraform
   builder:
     - docker
   base:

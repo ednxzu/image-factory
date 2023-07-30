@@ -1,7 +1,6 @@
 ---
 - name: test
   hosts: docker
-  gather_facts: no
   become: no
   tasks:
     - name: "Test inventory names"
@@ -25,7 +24,3 @@
         dest: "{{ factory['root_dir'] }}/packer/builds/{{ inventory_hostname }}/{{ inventory_hostname }}.pkr.hcl"
         mode: '0600'
       delegate_to: localhost
-
-    # - name: "apt update"
-    #   ansible.builtin.apt:
-    #     update_cache: true

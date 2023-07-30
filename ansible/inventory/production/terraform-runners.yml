@@ -10,6 +10,7 @@ hosts:
           parents:
             - name: "{{ builder }}"
             - name: "{{ base }}"
+    - name: "terraform"
 
 layers:
   builder:

@@ -12,7 +12,7 @@ packer {
 }
 
 source "docker" "{{ inventory_hostname }}" {
-  image  = "{{ docker_base_image }}"
+  image  = "{{ docker_source_registry }}/{{ docker_base_image_publisher}}/{{ docker_base_image }}"
   commit = true
   login = false
   run_command = ["-d", "-i", "-t", "--name", "{{ inventory_hostname }}", "{% raw %}{{.Image}}{% endraw %}", "{{ docker_run_command }}"]

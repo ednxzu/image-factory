@@ -4,13 +4,14 @@ plugin: generator
 hosts:
   name: "renovate_{{ builder }}_{{ base }}_{{ version }}"
   parents:
+    - name: "renovate"
+    - name: "renovate_{{ builder }}_{{ base }}"
     - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
         - name: "{{ builder }}_{{ base }}"
           parents:
             - name: "{{ builder }}"
             - name: "{{ base }}"
-    - name: "renovate"
 
 layers:
   builder:
@@ -18,5 +19,6 @@ layers:
   base:
     - node
   version:
+    - 16
     - 18
     - 20

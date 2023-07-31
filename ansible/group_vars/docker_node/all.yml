@@ -1,4 +1,5 @@
 ---
+docker_base_image_publisher: _
 docker_base_image_name: node
 docker_base_image: "{{ docker_base_image_name }}:{{ docker_base_image_tag }}"
 docker_run_command: "/bin/bash"

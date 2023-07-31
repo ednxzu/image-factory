@@ -1,4 +1,7 @@
 ---
+group_build: all # dummy variables, intended for linting only
+target_host: all # dummy variables, intended for linting only
+
 factory:
   root_dir: "{{ lookup('env', 'PWD') }}"
 
@@ -7,5 +10,3 @@ packer:
     docker: "1.0.8"
   provisioner_versions:
     ansible: "1.1.0"
-
-docker_source_registry:

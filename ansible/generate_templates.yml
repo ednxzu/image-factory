@@ -18,9 +18,9 @@
         mode: '0755'
       delegate_to: localhost
 
-    - name: "Generate build files"
+    - name: "Generate build files for docker images"
       ansible.builtin.template:
-        src: "{{ factory['root_dir'] }}/packer/templates/docker_build.pkr.hcl.j2"
-        dest: "{{ factory['root_dir'] }}/packer/builds/{{ inventory_hostname }}/{{ inventory_hostname }}.pkr.hcl"
+        src: "{{ factory['root_dir'] }}/packer/templates/docker/docker_build.pkr.hcl.j2"
+        dest: "{{ factory['root_dir'] }}/packer/builds{{ inventory_hostname }}/{{ inventory_hostname }}.pkr.hcl"
         mode: '0600'
       delegate_to: localhost

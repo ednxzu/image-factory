@@ -1,6 +1,6 @@
 ---
 - name: test
-  hosts: docker
+  hosts: "{{ build_group }}"
   become: no
   tasks:
     - name: "Test inventory names"

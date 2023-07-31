@@ -34,10 +34,15 @@ build {
 
   provisioner "ansible" {
     ansible_env_vars = ["ANSIBLE_HOST_KEY_CHECKING=false"]
-    extra_arguments  = ["-e ansible_connection=docker", "-e ansible_python_interpreter=/usr/bin/python3", "-e ansible_host=standard_docker_node_18", "-e builder_type=docker", "-e target_host=standard_docker_node_18"]
+    extra_arguments  = ["-e ansible_connection=docker", "-e ansible_python_interpreter=/usr/bin/python3", "-e ansible_host={{ inventory_hostname }}", "-e builder_type=docker", "-e target_host={{ inventory_hostname }}"]
     inventory_file   = "./ansible/inventory/production/standard-runners.yml"
     playbook_file    = "./ansible/standard_docker_node.yml"
     galaxy_file = "ansible/roles/requirements.yml"
     galaxy_force_install = true
+  }
+
+  post-processor "docker-tag" {
+    repository = "{{ inventory_hostname }}"
+    tags = ["latest"]
   }
 }

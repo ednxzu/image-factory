@@ -4,13 +4,14 @@ plugin: generator
 hosts:
   name: "standard_{{ builder }}_{{ base }}_{{ version }}"
   parents:
+    - name: "standard"
+    - name: "standard_{{ builder }}_{{ base }}"
     - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
         - name: "{{ builder }}_{{ base }}"
           parents:
             - name: "{{ builder }}"
             - name: "{{ base }}"
-    - name: "standard"
 
 layers:
   builder:

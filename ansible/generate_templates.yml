@@ -1,5 +1,5 @@
 ---
-- name: test
+- name: "Generate templates"
   hosts: "{{ build_group }}"
   become: no
   tasks:

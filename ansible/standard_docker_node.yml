@@ -1,5 +1,5 @@
 ---
-- name: test
+- name: "Standard docker node"
   hosts: "{{ target_host }}"
   gather_facts: true
   become: no

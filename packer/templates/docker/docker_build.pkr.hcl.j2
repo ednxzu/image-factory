@@ -12,7 +12,7 @@ packer {
 }
 
 source "docker" "{{ inventory_hostname }}" {
-  image  = "{{ docker_source_registry }}/{{ docker_base_image_publisher}}/{{ docker_base_image }}"
+  image  = "{{ docker_base_image }}"
   commit = true
   login = false
   run_command = ["-d", "-i", "-t", "--name", "{{ inventory_hostname }}", "{% raw %}{{.Image}}{% endraw %}", "{{ docker_run_command }}"]
@@ -41,8 +41,8 @@ build {
       "-e builder_type=docker",
       "-e target_host={{ inventory_hostname }}"
     ]
-    inventory_file   = "./ansible/inventory/production/standard-runners.yml"
-    playbook_file    = "./ansible/standard_docker_node.yml"
+    inventory_file   = "ansible/inventory/production/{{ inventory_file | basename }}"
+    playbook_file    = "ansible/02_{{ build_group }}.yml"
     galaxy_file = "ansible/roles/requirements.yml"
     galaxy_force_install = true
   }

@@ -1,0 +1,14 @@
+---
+manage_apt_packages_list:
+  - name: jq
+    version: latest
+    state: present
+  - name: tree
+    version: latest
+    state: present
+  - name: rsync
+    version: latest
+    state: present
+  - name: sshpass
+    version: latest
+    state: present

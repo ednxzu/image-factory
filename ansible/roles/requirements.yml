@@ -2,6 +2,7 @@
 # requirements file
 roles:
   - name: ednxzu.manage_repositories
+  - name: ednxzu.manage_apt_packages
+  - name: ednxzu.manage_pip_packages
   - name: ednxzu.install_docker
   - name: ednxzu.import_vault_root_ca
-  - name: ednxzu.manage_apt_packages

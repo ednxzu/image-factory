@@ -1,0 +1,17 @@
+---
+# cleanup docker images
+- name: "Cleanup apt cache and unnecessary packages"
+  ansible.builtin.apt:
+    clean: true
+    autoclean: true
+    autoremove: true
+
+- name: "Remove apt list directory"
+  ansible.builtin.file:
+    path: /var/lib/apt/lists
+    state: absent
+
+- name: "Remove apt archives directory"
+  ansible.builtin.file:
+    path: /var/cache/apt/archives
+    state: absent

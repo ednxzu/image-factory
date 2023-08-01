@@ -2,10 +2,10 @@
 # production inventory for the ci-factory
 plugin: generator
 hosts:
-  name: "standard_{{ builder }}_{{ base }}_{{ version }}"
+  name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
   parents:
-    - name: "standard"
-    - name: "standard_{{ builder }}_{{ base }}"
+    - name: "{{ flavor }}"
+    - name: "{{ flavor }}_{{ builder }}_{{ base }}"
     - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
         - name: "{{ builder }}_{{ base }}"
@@ -14,6 +14,8 @@ hosts:
             - name: "{{ base }}"
 
 layers:
+  flavor:
+    - standard
   builder:
     - docker
   base:

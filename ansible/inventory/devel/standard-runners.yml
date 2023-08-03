@@ -1,0 +1,26 @@
+---
+# production inventory for the ci-factory
+plugin: generator
+hosts:
+  name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
+  parents:
+    - name: "{{ flavor }}"
+    - name: "{{ flavor }}_{{ builder }}_{{ base }}"
+    - name: "{{ builder }}_{{ base }}_{{ version }}"
+      parents:
+        - name: "{{ builder }}_{{ base }}"
+          parents:
+            - name: "{{ builder }}"
+            - name: "{{ base }}"
+
+layers:
+  flavor:
+    - standard
+  builder:
+    - docker
+  base:
+    - node
+  version:
+    - 16
+    - 18
+    - 20

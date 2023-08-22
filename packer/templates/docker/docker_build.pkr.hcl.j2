@@ -28,7 +28,7 @@ build {
       "DEBIAN_FRONTEND=noninteractive",
     ]
     inline = [
-      "apt update && apt install python3-apt -y"
+      "apt-get update && apt-get install python3-full python3-apt -y"
     ]
   }
 
@@ -42,7 +42,7 @@ build {
       "-e target_host={{ inventory_hostname }}"
     ]
     inventory_file   = "ansible/inventory/production/{{ inventory_file | basename }}"
-    playbook_file    = "ansible/02_{{ build_group }}.yml"
+    playbook_file    = "ansible/tasks/02_{{ build_group }}.yml"
     galaxy_file = "ansible/roles/requirements.yml"
     galaxy_force_install = true
   }

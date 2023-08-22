@@ -1,6 +1,6 @@
 ---
-group_build: all # dummy variables, intended for linting only
-target_host: all # dummy variables, intended for linting only
+build_group: all  # dummy variables, intended for linting only
+target_host: all  # dummy variables, intended for linting only
 
 factory:
   root_dir: "{{ lookup('env', 'PWD') }}"

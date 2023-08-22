@@ -22,7 +22,7 @@ manage_pip_packages_list:
     version_constraint: latest
     state: present
   - name: molecule
-    version_constraint: "==5.0.1"
+    version_constraint: "==6.0.1"
     state: present
   - name: molecule-plugins
     version_constraint: latest
@@ -31,5 +31,5 @@ manage_pip_packages_list:
     version_constraint: latest
     state: present
   - name: ansible-lint
-    version_constraint: "==6.16.2"
+    version_constraint: "==6.18.0"
     state: present

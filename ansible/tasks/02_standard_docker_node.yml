@@ -12,14 +12,10 @@
       ansible.builtin.include_role:
         name: ednxzu.manage_apt_packages
 
-    - name: "Include ednxzu.manage_pip_packages"
-      ansible.builtin.include_role:
-        name: ednxzu.manage_pip_packages
-
     - name: "Include ednxzu.install_docker"
       ansible.builtin.include_role:
         name: ednxzu.install_docker
 
     - name: "Include cleanup task"
       ansible.builtin.include_tasks:
-        file: "tasks/cleanup_docker.yml"
+        file: "cleanup_docker.yml"

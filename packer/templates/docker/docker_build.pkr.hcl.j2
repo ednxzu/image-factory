@@ -42,7 +42,7 @@ build {
       "-e target_host={{ inventory_hostname }}"
     ]
     inventory_file   = "ansible/inventory/production/{{ inventory_file | basename }}"
-    playbook_file    = "ansible/tasks/02_{{ build_group }}.yml"
+    playbook_file    = "ansible/{{ default_ansible_playbook }}"
     galaxy_file = "ansible/roles/requirements.yml"
     galaxy_force_install = true
   }

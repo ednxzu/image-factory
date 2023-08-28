@@ -4,8 +4,11 @@ plugin: generator
 hosts:
   name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
   parents:
-    - name: "{{ flavor }}"
     - name: "{{ flavor }}_{{ builder }}_{{ base }}"
+      parents:
+        - name: "{{ flavor }}_{{ builder }}"
+          parents:
+            - name: "{{ flavor }}"
     - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
         - name: "{{ builder }}_{{ base }}"
@@ -21,6 +24,5 @@ layers:
   base:
     - node
   version:
-    - 16
     - 18
     - 20

@@ -1,35 +1,9 @@
 ---
 manage_pip_packages_list:
-  - name: pip
-    version_constraint: latest
-    state: present
-  - name: cffi
-    version_constraint: latest
-    state: present
-  - name: hvac
-    version_constraint: latest
-    state: present
-  - name: mitogen
-    version_constraint: latest
-    state: present
-  - name: jmespath
-    version_constraint: latest
-    state: present
-  - name: yamllint
-    version_constraint: latest
-    state: present
-  - name: mitogen
-    version_constraint: latest
-    state: present
   - name: molecule
     version_constraint: "==6.0.1"
     state: present
   - name: molecule-plugins
     version_constraint: latest
     state: present
-  - name: ansible
-    version_constraint: latest
-    state: present
-  - name: ansible-lint
-    version_constraint: "==6.18.0"
-    state: present
+manage_pip_packages_allow_break_system_packages: true

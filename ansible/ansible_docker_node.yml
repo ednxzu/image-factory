@@ -1,0 +1,17 @@
+---
+- name: "Ansible docker node"
+  hosts: "{{ target_host }}"
+  gather_facts: true
+  become: no
+  tasks:
+    - name: "Include standard_docker_node tasks"
+      ansible.builtin.include_tasks:
+        file: "tasks/standard_docker_node.yml"
+
+    - name: "Include ansible_docker_node tasks"
+      ansible.builtin.include_tasks:
+        file: "tasks/ansible_docker_node.yml"
+
+    - name: "Include cleanup tasks"
+      ansible.builtin.include_tasks:
+        file: "tasks/cleanup_docker.yml"

@@ -1,0 +1,5 @@
+---
+# tasks for ansible_docker_node
+  - name: "Include ednxzu.manage_pip_packages"
+    ansible.builtin.include_role:
+      name: ednxzu.manage_pip_packages

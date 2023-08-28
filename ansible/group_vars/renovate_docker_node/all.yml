@@ -1,0 +1,2 @@
+---
+default_ansible_playbook: "renovate_docker_node.yml"

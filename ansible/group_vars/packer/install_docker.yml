@@ -1,0 +1,9 @@
+---
+install_docker_edition: ce
+install_docker_start_service: false
+install_docker_compose: false
+install_docker_compose_version: latest
+install_docker_python_packages: true
+install_docker_python_packages_version: latest
+install_docker_users: []
+install_docker_daemon_options: {}

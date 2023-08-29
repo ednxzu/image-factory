@@ -8,6 +8,10 @@
       ansible.builtin.include_tasks:
         file: "tasks/standard_docker_node.yml"
 
+    - name: "Include install_docker tasks"
+      ansible.builtin.include_tasks:
+        file: "tasks/install_docker.yml"
+
     - name: "Include packer_docker_node tasks"
       ansible.builtin.include_tasks:
         file: "tasks/packer_docker_node.yml"

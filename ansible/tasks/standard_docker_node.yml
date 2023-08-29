@@ -11,7 +11,3 @@
 - name: "Include ednxzu.manage_apt_packages"
   ansible.builtin.include_role:
     name: ednxzu.manage_apt_packages
-
-- name: "Include ednxzu.install_docker"
-  ansible.builtin.include_role:
-    name: ednxzu.install_docker

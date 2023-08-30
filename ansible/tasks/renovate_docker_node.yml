@@ -1,8 +1,0 @@
----
-# tasks for renovate_docker_node
-- name: "Install renovate"
-  community.general.npm:
-    name: renovate
-    state: present
-    version: "{{ renovate_version }}"
-    global: true

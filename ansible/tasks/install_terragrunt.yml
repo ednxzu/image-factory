@@ -1,0 +1,22 @@
+---
+- name: "Get release for terragrunt:{{ terragrunt_version }}"
+  vars:
+    _terragrunt_url_ext: "{% if terragrunt_version == 'latest'%}releases{% else %}releases/tags{% endif %}"
+  ansible.builtin.uri:
+    url: "{{ terragrunt_github_api }}/{{ _terragrunt_url_ext }}/{{ terragrunt_version }}"
+    return_content: true
+  register: _terragrunt_new_release
+
+- name: "Set facts for wanted terragrunt release"
+  ansible.builtin.set_fact:
+    terragrunt_wanted_version: "{{ _terragrunt_new_release.json['tag_name']|regex_replace('v', '') }}"
+  when: _terragrunt_new_release.json is defined
+    and ( _terragrunt_new_release.json | length > 0)
+
+- name: "Download and install terragrunt:{{ terragrunt_version }}"
+  ansible.builtin.get_url:
+    url: "{{ terragrunt_github_url }}/releases/download/v{{ terragrunt_wanted_version }}/terragrunt_linux_{{ terragrunt_arch_map[ansible_architecture] }}"
+    dest: "{{ terragrunt_path }}"
+    owner: root
+    group: root
+    mode: '0755'

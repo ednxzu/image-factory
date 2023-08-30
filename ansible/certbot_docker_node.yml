@@ -1,5 +1,5 @@
 ---
-- name: "Ansible docker node"
+- name: "Packer docker node"
   hosts: "{{ target_host }}"
   gather_facts: true
   become: no
@@ -15,14 +15,6 @@
     - name: "Include ednxzu.manage_apt_packages"
       ansible.builtin.include_role:
         name: ednxzu.manage_apt_packages
-
-    - name: "Include ednxzu.install_docker"
-      ansible.builtin.include_role:
-        name: ednxzu.install_docker
-
-    - name: "Include ednxzu.manage_pip_packages"
-      ansible.builtin.include_role:
-        name: ednxzu.manage_pip_packages
 
     - name: "Include cleanup tasks"
       ansible.builtin.include_tasks:

@@ -24,7 +24,7 @@ hosts:
 
 layers:
   flavor:
-    - terraform
+    - certbot
   builder:
     - docker
   base:

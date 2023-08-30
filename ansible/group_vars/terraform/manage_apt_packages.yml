@@ -1,0 +1,11 @@
+---
+manage_apt_packages_list:
+  - name: jq
+    version: latest
+    state: present
+  - name: tree
+    version: latest
+    state: present
+  - name: terraform
+    version: latest
+    state: present

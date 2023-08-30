@@ -48,7 +48,7 @@ build {
   }
 
   post-processor "docker-tag" {
-    repository = "{{ inventory_hostname }}"
-    tags = ["latest"]
+    repository = "{{ flavor }}"
+    tags = ["{{ base }}-{{ version }}"]
   }
 }

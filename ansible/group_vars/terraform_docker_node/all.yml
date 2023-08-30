@@ -1,0 +1,2 @@
+---
+default_ansible_playbook: "terraform_docker_node.yml"

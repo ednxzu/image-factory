@@ -1,0 +1,46 @@
+---
+- name: "Terraform docker node"
+  hosts: "{{ target_host }}"
+  gather_facts: true
+  become: no
+  tasks:
+    - name: "Include ednxzu.import_vault_root_ca"
+      ansible.builtin.include_role:
+        name: ednxzu.import_vault_root_ca
+
+    - name: "Include ednxzu.manage_repositories"
+      ansible.builtin.include_role:
+        name: ednxzu.manage_repositories
+
+    - name: "Include ednxzu.manage_apt_packages"
+      ansible.builtin.include_role:
+        name: ednxzu.manage_apt_packages
+
+    - name: "Install terragrunt:{{ terragrunt_version }}"
+      block:
+        - name: "Get release for terragrunt:{{ terragrunt_version }}"
+          vars:
+            _terragrunt_url_ext: "{% if terragrunt_version == 'latest'%}releases{% else %}releases/tags{% endif %}"
+          ansible.builtin.uri:
+            url: "{{ terragrunt_github_api }}/{{ _terragrunt_url_ext }}/{{ terragrunt_version }}"
+            return_content: true
+          register: _terragrunt_new_release
+
+        - name: "Set facts for wanted terragrunt release"
+          ansible.builtin.set_fact:
+            terragrunt_wanted_version: "{{ _terragrunt_new_release.json['tag_name']|regex_replace('v', '') }}"
+          when: _terragrunt_new_release.json is defined
+            and ( _terragrunt_new_release.json | length > 0)
+
+        - name: "Download and install terragrunt:{{ terragrunt_version }}"
+          ansible.builtin.get_url:
+            url: "{{ terragrunt_github_url }}/releases/download/v{{ terragrunt_wanted_version }}/terragrunt_linux_{{ terragrunt_arch_map[ansible_architecture] }}"
+            dest: "{{ terragrunt_path }}"
+            owner: root
+            group: root
+            mode: '0755'
+
+
+    - name: "Include cleanup tasks"
+      ansible.builtin.include_tasks:
+        file: "tasks/cleanup_docker.yml"

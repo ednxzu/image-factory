@@ -3,14 +3,6 @@
   hosts: "{{ build_group }}"
   become: no
   tasks:
-    - name: "Test inventory names"
-      ansible.builtin.debug:
-        msg: |
-          {{ inventory_hostname }}
-          {{ factory['root_dir'] }}
-          {{ docker_base_image }}
-      delegate_to: localhost
-
     - name: "Create build directories in packer/builds"
       ansible.builtin.file:
         path: "{{ factory['root_dir'] }}/packer/builds/{{ inventory_hostname }}"

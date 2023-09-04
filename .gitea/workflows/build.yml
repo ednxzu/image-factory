@@ -1,0 +1,29 @@
+---
+name: build
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Building
+    runs-on: ubuntu-latest
+    container:
+      image: git.ednz.fr/container-factory/packer-runner:act-latest
+      credentials:
+        username: ${{ secrets.ACTIONS_USER }}
+        password: ${{ secrets.ACTIONS_TOKEN }}
+    strategy:
+      matrix:
+        build_group: [ansible-runners]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: "Generate packer files"
+        run: bash build.sh
+        shell: bash
+        working-directory: ${{ gitea.workspace }}
+        env:
+          BUILD_GROUP: ${{ matrix.build_group }}

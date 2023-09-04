@@ -27,3 +27,8 @@ jobs:
         working-directory: ${{ gitea.workspace }}
         env:
           BUILD_GROUP: ${{ matrix.build_group }}
+
+      - name: "Ensure packer files are generated"
+        run: tree
+        shell: bash
+        working-directory: ${{ gitea.workspace }}/packer/builds

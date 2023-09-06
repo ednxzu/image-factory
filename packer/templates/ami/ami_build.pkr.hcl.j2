@@ -1,0 +1,56 @@
+packer {
+  required_plugins {
+    openstack = {
+      version = "{{ packer['builder_versions']['openstack'] }}"
+      source  = "github.com/hashicorp/openstack"
+    }
+    ansible = {
+      version = "{{ packer['provisioner_versions']['ansible'] }}"
+      source  = "github.com/hashicorp/ansible"
+    }
+  }
+}
+
+source "openstack" "standard_ami_ubuntu_2204" {
+  insecure = "false"
+  image_name = "standard_ami_ubuntu_2204"
+  ssh_username = "ubuntu"
+  external_source_image_url = "https://cloud-images.ubuntu.com/jammy/current/jammy-server-cloudimg-amd64.img"
+  tenant_name  = "admin"
+  flavor = "os.small"
+  networks = [
+    "a4dc50e6-8a84-499f-a330-7e358a31f9cd"
+  ]
+  use_blockstorage_volume = true
+  volume_size = 4
+  image_disk_format = "qcow2"
+}
+
+build {
+  name = "standard_ami_ubuntu_2204"
+  sources = [
+    "source.openstack.standard_ami_ubuntu_2204"
+  ]
+  # provisioner "shell" {
+  #   environment_vars = [
+  #     "DEBIAN_FRONTEND=noninteractive",
+  #   ]
+  #   inline = [
+  #     "sudo apt-get update && sudo apt-get install python3-full python3-apt -y"
+  #   ]
+  # }
+
+  provisioner "ansible" {
+    ansible_env_vars = ["ANSIBLE_HOST_KEY_CHECKING=false"]
+    use_proxy = false
+    extra_arguments  = [
+      "-e ansible_python_interpreter=/usr/bin/python3",
+      "-e ansible_host=standard-ami-ubuntu-2204.gre1.ednz.fr",
+      "-e target_host=standard-ami-ubuntu-2204.gre1.ednz.fr"
+    ]
+    inventory_file   = "ansible/inventory/devel/openstack-ami.yml"
+    playbook_file    = "ansible/openstack_ami.yml"
+    galaxy_file = "ansible/roles/requirements.yml"
+    galaxy_force_install = true
+  }
+}

@@ -8,5 +8,6 @@ factory:
 packer:
   builder_versions:
     docker: "1.0.8"
+    openstack: "1.1.1"
   provisioner_versions:
     ansible: "1.1.0"

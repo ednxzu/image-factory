@@ -1,2 +1,3 @@
 ---
 default_ansible_playbook: "renovate_docker_node.yml"
+renovate_version: "36.68.1"

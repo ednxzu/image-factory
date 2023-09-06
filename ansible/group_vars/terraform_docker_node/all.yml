@@ -1,2 +1,9 @@
 ---
 default_ansible_playbook: "terraform_docker_node.yml"
+terragrunt_version: latest
+terragrunt_github_api: https://api.github.com/repos/gruntwork-io/terragrunt
+terragrunt_github_url: https://github.com/gruntwork-io/terragrunt
+terragrunt_path: "/usr/local/bin/terragrunt"
+terragrunt_arch_map:
+  x86_64: 'amd64'
+  aarch64: 'arm64'

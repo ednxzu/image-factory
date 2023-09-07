@@ -19,8 +19,8 @@ source "openstack" "{{ inventory_hostname }}" {
   external_source_image_url = "{{ external_image_source }}"
   tenant_name  = "{{ tenant_name }}"
   flavor = "{{ build_flavor }}"
-  networks = {{ network_attachement }}
-  use_blockstorage_volume = {{ use_block_storage }}
+  networks = [{% for network in network_attachement %}"{{ network }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+  use_blockstorage_volume = {{ use_block_storage|lower }}
   volume_size = {{ volume_size_gb }}
   image_disk_format = "{{ image_disk_format }}"
 }

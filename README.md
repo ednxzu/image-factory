@@ -2,37 +2,22 @@
 
 This repository houses the code for ednz-cloud openstack infrastructure, deployed with kolla-ansible.
 
-## :gear: requirements
+## ⚙ requirements
 
-### :snake: python virtual environment
+### 📦 package requirements
 
-In order to get a functional kolla-ansible install, it is highly recommended to get a python virtual environment.
+In order to be able to test builds locally, you will need a few tools.
 
 Install the dependencies.
 ```bash
-sudo apt install git python3-dev libffi-dev gcc libssl-dev python3-venv
-```
-
-Create your virtual environment.
-```bash
-python3 -m venv /path/to/venv
-source /path/to/venv/bin/activate
-```
-
-Install the requirements.
-```bash
-pip install -U pip
-pip install 'ansible>=6,<8'
-```
-
-Install kolla-ansible.
-```bash
-pip install git+https://opendev.org/openstack/kolla-ansible@stable/2023.1
+ansible (to build packer files, as well as provision containers and AMIs)
+packer (to build AMI and container images)
+vault (to decrypt credentials/clouds.yaml)
 ```
 
 ### :lock: authenticate to vault
 
-To be able to unencrypt sensitive files, and access passwords, you will need to authenticate to vault and retrieve a token that has read access to the `kv_os/` mount.
+To be able to unencrypt sensitive files, and access passwords, you will need to authenticate to vault and retrieve a token that has read access to the `kv/image-factory` mount.
 
 The following environment variables are required (or a .vault_token helper file)
 ```bash
@@ -40,30 +25,28 @@ export VAULT_ADDR=<vault api address>
 export VAULT_TOKEN=<your vault token>
 ```
 
-### :key: get your passwords.yml file
-To be able to work with this deployment, you'll need to populate your passwords.yml file.
+### 🛠 generate packer build files
 
-Copy the `passwords.yml.sample` file from the repository.
+In order to build images, you will need to generate the necessary packer files.
+
+To do so, run:
 ```bash
-cp etc/kolla/passwords.yml.sample <path/to/passwords.yml>
+BUILD_GROUP=<your-build-group> bash build.sh
+```
+Where `<your-build-group>` is the name of one of the inventory, without its extension (for example, `ansible-runners` will build the packer files for the `ansible-runners.yml` production inventory)
+
+Note that `devel` inventories should not be built. They are mainly here to test out new layouts.
+
+## 🏗 build images
+
+### 🏡 local builds
+
+Once the files have been generated, use the standard packer commands to build.
+```bash
+packer init packer/builds/<image_to_build>/<image_to_build>.pkr.hcl
+packer validate packer/builds/<image_to_build>/<image_to_build>.pkr.hcl
+packer build packer/builds/<image_to_build>/<image_to_build>.pkr.hcl
 ```
 
-```bash
-  kolla-readpwd -p <path/to/passwords.yml> \
-  --vault-addr $VAULT_ADDR \
-  --vault-token  $VAULT_TOKEN \
-  --vault-mount-point kv_os \
-  --vault-kv-path kolla/passwords
-```
-
-## :smiling_imp: the real deal
-
-### :koala: run deployments against the production environment
-To run deployments (or any other action) against the production environment, you can run the following command from the root of the git project.
-```bash
-  kolla-ansible --inventory inventory/production/hosts.ini \
-  --configdir $(pwd)/etc/kolla \
-  --passwords <path/to/passwords.yml> \
-   <your-action> \
-  --tags <your-tags-if-needed>
-```
+> **Warning**
+> These commands should be run from the root of the repository, as all the paths are relative to it.

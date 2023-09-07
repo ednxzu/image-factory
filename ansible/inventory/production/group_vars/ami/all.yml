@@ -1,0 +1,10 @@
+---
+cloud_entry: "openstack"
+tenant_name: "admin"
+build_flavor: "os.small"
+network_attachement:
+  - a4dc50e6-8a84-499f-a330-7e358a31f9cd
+use_block_storage: true
+volume_size_gb: 4
+image_disk_format: qcow2
+build_domain: "gre1.ednz.fr"

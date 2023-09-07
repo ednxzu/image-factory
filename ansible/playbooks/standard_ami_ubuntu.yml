@@ -20,7 +20,3 @@
     - name: "Include ednxzu.install_docker"
       ansible.builtin.include_role:
         name: ednxzu.install_docker
-
-    - name: "Include cleanup tasks"
-      ansible.builtin.include_tasks:
-        file: "tasks/cleanup_docker.yml"

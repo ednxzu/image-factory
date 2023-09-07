@@ -1,2 +1,0 @@
----
-default_ansible_playbook: "packer_docker_node.yml"

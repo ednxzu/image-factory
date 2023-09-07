@@ -2,7 +2,7 @@
 # production inventory for the ci-factory
 plugin: generator
 hosts:
-  name: "{{ flavor }}-{{ builder }}-{{ base }}-{{ version }}.{{ domain }}"
+  name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
   parents:
     - name: "{{ flavor }}_{{ builder }}_{{ base }}"
       vars:
@@ -23,8 +23,6 @@ hosts:
             - name: "{{ base }}"
 
 layers:
-  domain:
-    - gre1.ednz.fr
   flavor:
     - standard
   builder:

@@ -11,3 +11,5 @@ packer:
     openstack: "1.1.1"
   provisioner_versions:
     ansible: "1.1.0"
+
+default_ansible_playbook: "{{ flavor }}_{{ builder }}_{{ base }}.yml"

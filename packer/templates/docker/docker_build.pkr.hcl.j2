@@ -41,9 +41,9 @@ build {
       "-e builder_type=docker",
       "-e target_host={{ inventory_hostname }}"
     ]
-    inventory_file   = "ansible/inventory/production/{{ inventory_file | basename }}"
-    playbook_file    = "ansible/{{ default_ansible_playbook }}"
-    galaxy_file = "ansible/roles/requirements.yml"
+    inventory_file       = "ansible/inventory/production/{{ inventory_file | basename }}"
+    playbook_file        = "ansible/playbooks/{{ default_ansible_playbook }}"
+    galaxy_file          = "ansible/roles/requirements.yml"
     galaxy_force_install = true
   }
 

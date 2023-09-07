@@ -1,0 +1,6 @@
+---
+external_image_url: "https://cloud-images.ubuntu.com"
+external_image_build: current
+external_image_name: "{{ ami_codename }}-server-cloudimg-amd64.img"
+
+external_image_source: "{{ external_image_url }}/{{ ami_codename }}/{{ external_image_build }}/{{ external_image_name }}"

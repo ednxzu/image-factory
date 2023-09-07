@@ -1,2 +1,0 @@
----
-default_ansible_playbook: "standard_ami_ubuntu.yml"

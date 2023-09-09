@@ -31,7 +31,7 @@ layers:
   builder:
     - ami
   base:
-    - ubuntu
+    - debian
   version:
-    - 2004
-    - 2204
+    - 11
+    - 12

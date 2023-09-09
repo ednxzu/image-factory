@@ -2,10 +2,12 @@
 - name: Generate templates
   hosts: "{{ build_group }}"
   become: no
+  vars:
+    target_build_name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
   tasks:
     - name: "Create build directories in packer/builds"
       ansible.builtin.file:
-        path: "{{ factory['root_dir'] }}/packer/builds/{{ inventory_hostname }}"
+        path: "{{ factory['root_dir'] }}/packer/builds/{{ target_build_name }}"
         state: directory
         mode: '0755'
       delegate_to: localhost
@@ -13,6 +15,6 @@
     - name: "Generate build files for docker images"
       ansible.builtin.template:
         src: "{{ factory['root_dir'] }}/packer/templates/{{ builder }}/{{ builder }}_build.pkr.hcl.j2"
-        dest: "{{ factory['root_dir'] }}/packer/builds/{{ inventory_hostname }}/{{ inventory_hostname }}.pkr.hcl"
+        dest: "{{ factory['root_dir'] }}/packer/builds/{{ target_build_name }}/{{ target_build_name }}.pkr.hcl"
         mode: '0600'
       delegate_to: localhost

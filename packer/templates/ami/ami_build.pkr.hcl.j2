@@ -11,11 +11,11 @@ packer {
   }
 }
 
-source "openstack" "{{ inventory_hostname }}" {
+source "openstack" "{{ inventory_hostname | replace('-','_') | replace('.'~build_domain,'') }}" {
   cloud = "{{ cloud_entry }}"
   insecure = "false"
-  image_name = "{{ inventory_hostname }}"
-  ssh_username = "ubuntu"
+  image_name = "{{ inventory_hostname | replace('.'~build_domain,'') }}"
+  ssh_username = "{{ ssh_user }}"
   external_source_image_url = "{{ external_image_source }}"
   tenant_name  = "{{ tenant_name }}"
   flavor = "{{ build_flavor }}"
@@ -26,9 +26,9 @@ source "openstack" "{{ inventory_hostname }}" {
 }
 
 build {
-  name = "{{ inventory_hostname }}"
+  name = "{{ inventory_hostname | replace('-','_') | replace('.'~build_domain,'') }}"
   sources = [
-    "source.openstack.{{ inventory_hostname }}"
+    "source.openstack.{{ inventory_hostname | replace('-','_') | replace('.'~build_domain,'') }}"
   ]
 
   provisioner "ansible" {
@@ -36,8 +36,8 @@ build {
     use_proxy = false
     extra_arguments  = [
       "-e ansible_python_interpreter=/usr/bin/python3",
-      "-e ansible_host={{ inventory_hostname | replace('_','-') }}.{{ build_domain }}",
-      "-e target_host={{ inventory_hostname | replace('_','-') }}.{{ build_domain }}"
+      "-e ansible_host={{ inventory_hostname }}",
+      "-e target_host={{ inventory_hostname }}"
     ]
     inventory_file       = "ansible/inventory/production/{{ inventory_file | basename }}"
     playbook_file        = "ansible/playbooks/{{ default_ansible_playbook }}"

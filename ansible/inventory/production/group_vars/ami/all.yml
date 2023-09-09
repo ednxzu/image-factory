@@ -7,4 +7,3 @@ network_attachement:
 use_block_storage: true
 volume_size_gb: 4
 image_disk_format: qcow2
-build_domain: "gre1.ednz.fr"

@@ -1,6 +1,6 @@
 # 🏭 image-factory
 
-This repository houses the code for ednz-cloud openstack infrastructure, deployed with kolla-ansible.
+The repository houses the code for building standard docker and openstack images to be used on the ednz-cloud platform.
 
 ## ⚙ requirements
 

@@ -5,4 +5,4 @@ external_image_name: "{{ base }}-{{ version }}-generic-amd64.qcow2"
 
 external_image_source: "{{ external_image_url }}/{{ ami_codename }}/{{ external_image_build }}/{{ external_image_name }}"
 
-ssh_user: ubuntu
+ssh_user: debian

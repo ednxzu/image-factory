@@ -5,6 +5,14 @@
   vars:
     target_build_name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
   tasks:
+    - name: "Create /etc/openstack directory"
+      ansible.builtin.file:
+        path: "/etc/openstack"
+        state: directory
+        mode: '0755'
+      delegate_to: localhost
+      run_once: true
+
     - name: "Copy the clouds.yaml config file to /etc/openstack"
       ansible.builtin.copy:
         src: "{{ factory['root_dir'] }}/credentials/clouds.yaml"

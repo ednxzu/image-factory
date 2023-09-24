@@ -6,6 +6,9 @@ function get_packer_build_list {
   echo ${raw_list[@]%.*}
 }
 
+#TODO
+# curl --silent --request POST --data "{\"role_id\":\"${ROLE_ID}\",\"secret_id\":\"${SECRET_ID}\"}" https://vault.ednz.fr/v1/auth/approle/login | jq -r .auth.client_token
+
 function main {
   shopt -s extglob
   build_list="@($(get_packer_build_list | sed -e 's/ /\|/g'))"
@@ -19,6 +22,7 @@ function main {
       ;;
     *)
       echo "No build_group specified or build_group does not exist. Aborting."
+      exit 1
       ;;
   esac
 }

@@ -12,17 +12,19 @@ packer {
 }
 
 source "openstack" "{{ inventory_hostname | replace('-','_') | replace('.'~build_domain,'') }}" {
-  cloud = "{{ cloud_entry }}"
-  insecure = "false"
-  image_name = "{{ inventory_hostname | replace('.'~build_domain,'') }}"
-  ssh_username = "{{ ssh_user }}"
+  cloud                     = "{{ cloud_entry }}"
+  insecure                  = "false"
+  instance_name             = "{{ inventory_hostname | replace('.'~build_domain,'') }}"
+  image_name                = "{{ inventory_hostname | replace('.'~build_domain,'') }}-${formatdate("DDMMYYYY", timestamp())}"
+  ssh_username              = "{{ ssh_user }}"
   external_source_image_url = "{{ external_image_source }}"
-  tenant_name  = "{{ tenant_name }}"
-  flavor = "{{ build_flavor }}"
-  networks = [{% for network in network_attachement %}"{{ network }}"{% if not loop.last %}, {% endif %}{% endfor %}]
-  use_blockstorage_volume = {{ use_block_storage|lower }}
-  volume_size = {{ volume_size_gb }}
-  image_disk_format = "{{ image_disk_format }}"
+  tenant_name               = "{{ tenant_name }}"
+  flavor                    = "{{ build_flavor }}"
+  networks                  = [{% for network in network_attachement %}"{{ network }}"{% if not loop.last %}, {% endif %}{% endfor %}]
+  use_blockstorage_volume   = {{ use_block_storage|lower }}
+  volume_size               = {{ volume_size_gb }}
+  image_disk_format         = "{{ image_disk_format }}"
+  image_visibility          = "{{ image_visibility }}"
 }
 
 build {

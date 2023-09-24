@@ -7,3 +7,4 @@ roles:
   - name: ednxzu.manage_pipx_packages
   - name: ednxzu.install_docker
   - name: ednxzu.import_vault_root_ca
+  - name: ednxzu.provision_management_user

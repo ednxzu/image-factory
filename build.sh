@@ -1,7 +1,7 @@
 #! /bin/bash
 
 ##### variables #####
-VAULT_ADDR=https://vault.ednz.fr
+export VAULT_ADDR=https://vault.ednz.fr
 if [[ $TEST -ne 'true' ]]; then
   unset VAULT_TOKEN
   ${VAULT_ROLE_ID:?VAULT_ROLE_ID needs to be set in order to proceed}
@@ -15,7 +15,7 @@ function get_packer_build_list {
 }
 
 function vault_login_approle {
-  VAULT_TOKEN=$(curl --silent --request POST --data "{\"role_id\":\"${VAULT_ROLE_ID}\",\"secret_id\":\"${VAULT_SECRET_ID}\"}" \
+  export VAULT_TOKEN=$(curl --silent --request POST --data "{\"role_id\":\"${VAULT_ROLE_ID}\",\"secret_id\":\"${VAULT_SECRET_ID}\"}" \
   $VAULT_ADDR/v1/auth/approle/login | jq -r .auth.client_token)
 }
 

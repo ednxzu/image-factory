@@ -21,7 +21,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: "Generate packer files"
+      - name: Install Python dependencies
+        uses: py-actions/py-dependency-install@v4
+        with:
+          path: "${{ gitea.workspace }}/requirements.txt"
+
+      - name: Generate packer files
         run: source build.sh
         shell: bash
         working-directory: ${{ gitea.workspace }}
@@ -30,7 +35,12 @@ jobs:
           VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
           BUILD_GROUP: ${{ matrix.build_group }}
 
-      - name: "Ensure packer files are generated"
+      - name: Display images status
+        run: python3 ami-cleanup.py
+        shell: bash
+        working-directory: ${{ gitea.workspace }}
+
+      - name: Ensure packer files are generated
         run: tree
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds

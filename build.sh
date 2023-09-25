@@ -1,9 +1,22 @@
 #! /bin/bash
 
+##### variables #####
+VAULT_ADDR=https://vault.ednz.fr
+if [[ $TEST -ne 'true' ]]; then
+  unset VAULT_TOKEN
+  ${VAULT_ROLE_ID:?VAULT_ROLE_ID needs to be set in order to proceed}
+  ${VAULT_SECRET_ID:?VAULT_SECRET_ID needs to be set in order to proceed}
+fi
+
 ##### functions #####
 function get_packer_build_list {
   raw_list=($(tree "$(dirname $0)/ansible/inventory/production" -L 1 -J --noreport | jq -r .[].contents[].name))
   echo ${raw_list[@]%.*}
+}
+
+function vault_login_approle {
+  VAULT_TOKEN=$(curl --silent --request POST --data "{\"role_id\":\"${VAULT_ROLE_ID}\",\"secret_id\":\"${VAULT_SECRET_ID}\"}" \
+  $VAULT_ADDR/v1/auth/approle/login | jq -r .auth.client_token)
 }
 
 #TODO
@@ -11,6 +24,9 @@ function get_packer_build_list {
 
 function main {
   shopt -s extglob
+  if [[ $TEST -ne 'true' ]]; then
+    vault_login_approle
+  fi
   build_list="@($(get_packer_build_list | sed -e 's/ /\|/g'))"
 
   case $BUILD_GROUP in

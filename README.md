@@ -31,11 +31,14 @@ In order to build images, you will need to generate the necessary packer files.
 
 To do so, run:
 ```bash
-BUILD_GROUP=<your-build-group> bash build.sh
+TEST=true BUILD_GROUP=<your-build-group> bash build.sh
 ```
 Where `<your-build-group>` is the name of one of the inventory, without its extension (for example, `ansible-runners` will build the packer files for the `ansible-runners.yml` production inventory)
 
 Note that `devel` inventories should not be built. They are mainly here to test out new layouts.
+
+> **Warning**
+> With `TESt=true`, the build script expects you to already have populated the `VAULT_TOKEN` variable, it will not try to authenticate against vault.
 
 ## 🏗 build images
 

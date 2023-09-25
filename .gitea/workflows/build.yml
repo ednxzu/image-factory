@@ -25,9 +25,9 @@ jobs:
         uses: py-actions/py-dependency-install@v4
         with:
           path: "${{ gitea.workspace }}/requirements.txt"
-          update-pip: "false"
-          update-setuptools: "false"
-          update-wheel: "false"
+          update-pip: "true"
+          update-setuptools: "true"
+          update-wheel: "true"
 
       - name: Generate packer files
         run: source build.sh

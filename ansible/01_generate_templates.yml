@@ -13,6 +13,8 @@
       delegate_to: localhost
       run_once: true
 
+
+
     - name: "Copy the clouds.yaml config file to /etc/openstack"
       ansible.builtin.copy:
         src: "{{ factory['root_dir'] }}/credentials/clouds.yaml"

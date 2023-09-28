@@ -1,2 +1,3 @@
 ---
+os_version: "20.04"
 ami_codename: "focal"

@@ -1,2 +1,3 @@
 ---
+os_version: "11"
 ami_codename: bullseye

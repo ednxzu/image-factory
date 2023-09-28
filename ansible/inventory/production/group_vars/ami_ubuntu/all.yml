@@ -1,4 +1,5 @@
 ---
+os_name: ubuntu
 external_image_url: "https://cloud-images.ubuntu.com"
 external_image_build: current
 external_image_name: "{{ ami_codename }}-server-cloudimg-amd64.img"

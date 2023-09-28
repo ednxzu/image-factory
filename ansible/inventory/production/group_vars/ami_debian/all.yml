@@ -1,4 +1,5 @@
 ---
+os_name: debian
 external_image_url: "https://cloud.debian.org/images/cloud"
 external_image_build: latest
 external_image_name: "{{ base }}-{{ version }}-generic-amd64.qcow2"

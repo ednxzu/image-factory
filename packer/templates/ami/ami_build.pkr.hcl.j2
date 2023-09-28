@@ -25,6 +25,11 @@ source "openstack" "{{ inventory_hostname | replace('-','_') | replace('.'~build
   volume_size               = {{ volume_size_gb }}
   image_disk_format         = "{{ image_disk_format }}"
   image_visibility          = "{{ image_visibility }}"
+  metadata = {
+    standard_build = "true"
+    ednz_cloud_eol = "{{ ednz_cloud_eol }}"
+    official_eol   = "{{ official_eol }}"
+  }
 }
 
 build {

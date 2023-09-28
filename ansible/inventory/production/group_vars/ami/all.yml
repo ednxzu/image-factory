@@ -8,3 +8,11 @@ use_block_storage: true
 volume_size_gb: 4
 image_disk_format: qcow2
 image_visibility: public
+
+end_of_life_api_url: https://endoflife.date/api
+end_of_life_full_url: "{{ end_of_life_api_url }}/{{ os_name }}/{{ os_version }}.json"
+offical_eol_unformatted: "{{ lookup('ansible.builtin.url', end_of_life_full_url) | from_json | json_query('eol') }}"
+official_eol: "{{ offical_eol_unformatted.split('-')[2] }}/{{ offical_eol_unformatted.split('-')[1] }}/{{ offical_eol_unformatted.split('-')[0] }}"
+
+ednz_cloud_eol_delta_days: 90
+ednz_cloud_eol: "{{ '%d/%m/%Y' | strftime(ansible_facts.date_time.epoch | int + (ednz_cloud_eol_delta_days * 86400)) }}"

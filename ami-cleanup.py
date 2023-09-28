@@ -9,7 +9,7 @@ from colorama import Fore, Style
 openstack.enable_logging(debug=False)
 
 # Initialize connection
-conn = openstack.connect(cloud='ednz-lab')
+conn = openstack.connect(cloud='openstack')
 
 # Parse command-line arguments
 parser = argparse.ArgumentParser(description="Filter OpenStack images by name pattern using regex.")

@@ -36,8 +36,8 @@ for image in images:
     created_at = datetime.datetime.strptime(image.created_at, '%Y-%m-%dT%H:%M:%SZ')
     outdated = created_at < days_ago
     image_pass = f"{Fore.GREEN}✔{Style.RESET_ALL}" if not outdated else f"{Fore.RED}✘{Style.RESET_ALL}"
-    status = f"UP TO DATE" if not outdated else f"OUTDATED"
-    table_data.append([image_pass, image.name, image.id, created_at.strftime('%Y-%m-%d %H:%M:%S'), status])
+    # status = f"UP TO DATE" if not outdated else f"OUTDATED"
+    table_data.append([image_pass, image.name, image.id, created_at.strftime('%Y-%m-%d %H:%M:%S')])
 
 # Print the table
 print(tabulate(table_data, headers=table_headers, tablefmt="grid"))

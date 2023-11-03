@@ -35,11 +35,6 @@ jobs:
           VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
           BUILD_GROUP: ${{ matrix.build_group }}
 
-      # - name: Display images status
-      #   run: python3 ami-cleanup.py "standard-ami-ubuntu-2204"
-      #   shell: bash
-      #   working-directory: ${{ gitea.workspace }}
-
       - name: Ensure packer files are generated
         run: tree
         shell: bash

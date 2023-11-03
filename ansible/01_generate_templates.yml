@@ -10,9 +10,6 @@
       delegate_to: localhost
       run_once: true
 
-    # - debug:
-    #     msg: "{{ ansible_facts }}"
-
     - name: "Create /etc/openstack directory"
       ansible.builtin.file:
         path: "/etc/openstack"

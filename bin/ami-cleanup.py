@@ -1,4 +1,3 @@
-#! /usr/bin/python3
 import openstack
 import sys
 import openstack.exceptions as os_exceptions
@@ -31,7 +30,10 @@ logo_mapping = {
 }
 
 def create_parser():
-    parser = argparse.ArgumentParser(description="Filter OpenStack images by name pattern using regex.")
+    parser = argparse.ArgumentParser(
+        description="Filter OpenStack images by name pattern using regex.",
+        formatter_class=argparse.RawTextHelpFormatter
+    )
     parser.add_argument(
         "--cloud", "-c",
         required=False,

@@ -1,0 +1,5 @@
+---
+manage_pip_packages_list:
+  - name: ansible
+    version_constraint: latest
+    state: present

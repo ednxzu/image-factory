@@ -1,5 +1,5 @@
 ---
-- name: "Ansible docker node"
+- name: "Packer docker node"
   hosts: "{{ target_host }}"
   gather_facts: true
   become: no

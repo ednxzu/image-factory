@@ -27,6 +27,10 @@
       become: true
       run_once: true
 
+    - name: "Debug"
+      ansible.builtin.debug:
+        msg: "{{ version }}"
+
     - name: "Create build directories in packer/builds"
       ansible.builtin.file:
         path: "{{ factory['root_dir'] }}/packer/builds/{{ target_build_name }}"

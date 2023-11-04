@@ -1,0 +1,47 @@
+---
+manage_apt_packages_list:
+  - name: apt-utils
+    version: latest
+    state: present
+  - name: build-essential
+    version: latest
+    state: present
+  - name: locales
+    version: latest
+    state: present
+  - name: libffi-dev
+    version: latest
+    state: present
+  - name: libssl-dev
+    version: latest
+    state: present
+  - name: libyaml-dev
+    version: latest
+    state: present
+  - name: python3-setuptools
+    version: latest
+    state: present
+  - name: python3-pip
+    version: latest
+    state: present
+  - name: python3-yaml
+    version: latest
+    state: present
+  - name: software-properties-common
+    version: latest
+    state: present
+  - name: rsyslog
+    version: latest
+    state: present
+  - name: systemd
+    version: latest
+    state: present
+  - name: systemd-cron
+    version: latest
+    state: present
+  - name: sudo
+    version: latest
+    state: present
+  - name: iproute2
+    version: latest
+    state: present

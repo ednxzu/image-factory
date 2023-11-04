@@ -1,26 +1,65 @@
 ---
-# production inventory for the ci-factory
+# devel inventory for the ci-factory
 plugin: generator
 hosts:
-  name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
+  name: "{{ type }}_{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
   parents:
-    - name: "{{ flavor }}"
-    - name: "{{ flavor }}_{{ builder }}_{{ base }}"
-    - name: "{{ builder }}_{{ base }}_{{ version }}"
+    - name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
       parents:
-        - name: "{{ builder }}_{{ base }}"
+        - name: "{{ flavor }}"
+    - name: "{{ type }}_{{ builder }}_{{ base }}_{{ version }}"
+      parents:
+        - name: "{{ type }}_{{ builder }}_{{ base }}"
           parents:
-            - name: "{{ builder }}"
-            - name: "{{ base }}"
+            - name: "{{ type }}_{{ builder }}"
+              vars:
+                type_builder: "{{ type }}_{{ builder }}"
+              parents:
+                - name: "{{ type }}"
+            - name: "{{ type }}_{{ base }}"
+        - name: "{{ builder }}_{{ base }}_{{ version }}"
+          parents:
+            - name: "{{ builder }}_{{ base }}"
+              vars:
+                builder_base: "{{ builder }}_{{ base }}"
+              parents:
+                - name: "{{ builder }}"
+                  vars:
+                    builder: "{{ builder }}"
+            - name: "{{ base }}_{{ version }}"
+              vars:
+                base_version: "{{ base }}_{{ version }}"
+              parents:
+                - name: "{{ base }}"
+                  vars:
+                    base: "{{ base }}"
+                - name: "{{ version }}"
+                  vars:
+                    version: "{{ version }}"
+        - name: "{{ type }}_{{ base }}_{{ version }}"
+    - name: "{{ type }}_{{ flavor }}_{{ base }}_{{ version }}"
+      parents:
+        - name: "{{ type }}_{{ flavor }}_{{ base }}"
+        - name: "{{ flavor }}_{{ base }}_{{ version }}"
+    - name: "{{ type }}_{{ flavor }}_{{ builder }}_{{ base }}"
+      parents:
+        - name: "{{ flavor }}_{{ builder }}_{{ base }}"
+          parents:
+            - name: "{{ flavor }}_{{ builder }}"
+            - name: "{{ flavor }}_{{ base }}"
+        - name: "{{ type }}_{{ flavor }}_{{ builder }}"
+          parents:
+            - name: "{{ type }}_{{ flavor }}"
 
 layers:
+  type:
+    - runner
   flavor:
-    - standard
+    - terraform
   builder:
     - docker
   base:
     - node
   version:
-    - 16
     - 18
     - 20

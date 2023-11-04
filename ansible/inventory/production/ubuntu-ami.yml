@@ -5,23 +5,44 @@ hosts:
   name: "{{ flavor }}-{{ builder }}-{{ base }}-{{ version }}.{{ build_domain }}"
   parents:
     - name: "{{ flavor }}_{{ builder }}_{{ base }}"
-      vars:
-        flavor: "{{ flavor }}"
-        builder: "{{ builder }}"
-        base: "{{ base }}"
-        build_domain: "{{ build_domain }}"
       parents:
         - name: "{{ flavor }}_{{ builder }}"
           parents:
             - name: "{{ flavor }}"
+              vars:
+                flavor: "{{ flavor }}"
+            - name: "{{ builder }}"
+              vars:
+                builder: "{{ builder }}"
+        - name: "{{ builder }}_{{ base }}"
+          parents:
+            - name : "{{ builder }}"
+              vars:
+                builder: "{{ builder }}"
+            - name: "{{ base }}"
+              vars:
+                base: "{{ base }}"
     - name: "{{ builder }}_{{ base }}_{{ version }}"
-      vars:
-        version: "{{ version }}"
       parents:
         - name: "{{ builder }}_{{ base }}"
           parents:
-            - name: "{{ builder }}"
+            - name : "{{ builder }}"
+              vars:
+                builder: "{{ builder }}"
             - name: "{{ base }}"
+              vars:
+                base: "{{ base }}"
+        - name: "{{ base }}_{{ version }}"
+          parents:
+            - name: "{{ base }}"
+              vars:
+                base: "{{ base }}"
+            - name: "{{ version}}"
+              vars:
+                version: "{{ version }}"
+    - name: "{{ build_domain }}"
+      vars:
+        build_domain: "{{ build_domain }}"
 
 layers:
   build_domain:

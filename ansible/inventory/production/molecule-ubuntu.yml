@@ -44,10 +44,12 @@ hosts:
 
 layers:
   flavor:
-    - renovate
+    - molecule
   builder:
     - docker
+    #- vagrant
   base:
-    - node
+    - ubuntu
   version:
-    - 20
+    - 2004
+    - 2204

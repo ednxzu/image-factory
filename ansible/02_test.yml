@@ -1,0 +1,15 @@
+---
+- name: Generate templates
+  hosts: "{{ build_group }}"
+  become: no
+  vars:
+    target_build_name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
+  tasks:
+    - name: "Gather facts"
+      ansible.builtin.setup:
+      delegate_to: localhost
+      run_once: true
+
+    - name: "Print all hostnames"
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }}"

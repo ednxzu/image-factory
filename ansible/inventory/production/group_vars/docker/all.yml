@@ -3,3 +3,9 @@ docker_source_registry: https://hub.docker.com
 docker_target_registry: https://git.ednz.fr/ednz-cloud/image-factory
 
 docker_build_changes: []
+
+docker_base_image_publisher: _
+docker_base_image_name: "{{ base }}"
+docker_base_image_tag: "{{ version }}"
+docker_base_image: "{{ docker_base_image_name }}:{{ docker_base_image_tag }}"
+docker_run_command: "/bin/bash"

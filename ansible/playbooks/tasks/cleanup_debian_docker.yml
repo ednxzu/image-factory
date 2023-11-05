@@ -1,0 +1,51 @@
+---
+# further cleanup for debian-based docker images
+- name: "Cleanup apt cache and unnecessary packages"
+  ansible.builtin.apt:
+    clean: true
+    autoclean: true
+    autoremove: true
+
+- name: "Empty apt list directory"
+  ansible.builtin.file:
+    state: "{{ item }}"
+    path: "/var/lib/apt/lists"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - absent
+    - directory
+
+- name: "Empty apt archives directory"
+  ansible.builtin.file:
+    state: "{{ item }}"
+    path: "/var/cache/apt/archives"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - absent
+    - directory
+
+- name: "Empty /usr/share/doc directory"
+  ansible.builtin.file:
+    state: "{{ item }}"
+    path: "/usr/share/doc"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - absent
+    - directory
+
+- name: "Empty /usr/share/man directory"
+  ansible.builtin.file:
+    state: "{{ item }}"
+    path: "/usr/share/man"
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - absent
+    - directory

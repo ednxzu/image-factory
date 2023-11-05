@@ -22,6 +22,8 @@ hosts:
             - name: "{{ base }}"
               vars:
                 base: "{{ base }}"
+              parents:
+                - name: "base"
     - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
         - name: "{{ builder }}_{{ base }}"
@@ -32,14 +34,20 @@ hosts:
             - name: "{{ base }}"
               vars:
                 base: "{{ base }}"
+              parents:
+                - name: "base"
         - name: "{{ base }}_{{ version }}"
           parents:
             - name: "{{ base }}"
               vars:
                 base: "{{ base }}"
+              parents:
+                - name: "base"
             - name: "{{ version}}"
               vars:
                 version: "{{ version }}"
+              parents:
+                - name: "version"
 
 layers:
   flavor:

@@ -52,11 +52,12 @@ hosts:
 
 layers:
   flavor:
-    - packer
+    - molecule
   builder:
     - docker
+    #- vagrant
   base:
-    - node
+    - debian
   version:
-    - 18
-    - 20
+    - 11
+    - 12

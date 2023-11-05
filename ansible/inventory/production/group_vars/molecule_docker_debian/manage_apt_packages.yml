@@ -1,0 +1,41 @@
+---
+manage_apt_packages_list:
+  - name: sudo
+    version: latest
+    state: present
+  - name: systemd
+    version: latest
+    state: present
+  - name: systemd-sysv
+    version: latest
+    state: present
+  - name: build-essential
+    version: latest
+    state: present
+  - name: wget
+    version: latest
+    state: present
+  - name: libffi-dev
+    version: latest
+    state: present
+  - name: libssl-dev
+    version: latest
+    state: present
+  - name: procps
+    version: latest
+    state: present
+  - name: python3-pip
+    version: latest
+    state: present
+  - name: python3-dev
+    version: latest
+    state: present
+  - name: python3-setuptools
+    version: latest
+    state: present
+  - name: python3-wheel
+    version: latest
+    state: present
+  - name: iproute2
+    version: latest
+    state: present

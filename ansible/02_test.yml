@@ -10,6 +10,6 @@
       delegate_to: localhost
       run_once: true
 
-    - name: "Print all hostnames"
+    - name: "Print all hostvars"
       ansible.builtin.debug:
-        msg: "{{ inventory_hostname }}"
+        msg: "{{ hostvars[inventory_hostname] }}"

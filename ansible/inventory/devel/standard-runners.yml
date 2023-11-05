@@ -1,65 +1,63 @@
 ---
-# devel inventory for the ci-factory
+# production inventory for the ci-factory
 plugin: generator
 hosts:
-  name: "{{ type }}_{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
+  name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
   parents:
-    - name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
+    - name: "{{ flavor }}_{{ builder }}_{{ base }}"
       parents:
-        - name: "{{ flavor }}"
-    - name: "{{ type }}_{{ builder }}_{{ base }}_{{ version }}"
-      parents:
-        - name: "{{ type }}_{{ builder }}_{{ base }}"
+        - name: "{{ flavor }}_{{ builder }}"
           parents:
-            - name: "{{ type }}_{{ builder }}"
+            - name: "{{ flavor }}"
               vars:
-                type_builder: "{{ type }}_{{ builder }}"
-              parents:
-                - name: "{{ type }}"
-            - name: "{{ type }}_{{ base }}"
-        - name: "{{ builder }}_{{ base }}_{{ version }}"
-          parents:
-            - name: "{{ builder }}_{{ base }}"
+                flavor: "{{ flavor }}"
+            - name: "{{ builder }}"
               vars:
-                builder_base: "{{ builder }}_{{ base }}"
-              parents:
-                - name: "{{ builder }}"
-                  vars:
-                    builder: "{{ builder }}"
-            - name: "{{ base }}_{{ version }}"
+                builder: "{{ builder }}"
+        - name: "{{ builder }}_{{ base }}"
+          parents:
+            - name : "{{ builder }}"
               vars:
-                base_version: "{{ base }}_{{ version }}"
+                builder: "{{ builder }}"
+            - name: "{{ base }}"
+              vars:
+                base: "{{ base }}"
               parents:
-                - name: "{{ base }}"
-                  vars:
-                    base: "{{ base }}"
-                - name: "{{ version }}"
-                  vars:
-                    version: "{{ version }}"
-        - name: "{{ type }}_{{ base }}_{{ version }}"
-    - name: "{{ type }}_{{ flavor }}_{{ base }}_{{ version }}"
+                - name: "base"
+    - name: "{{ builder }}_{{ base }}_{{ version }}"
       parents:
-        - name: "{{ type }}_{{ flavor }}_{{ base }}"
-        - name: "{{ flavor }}_{{ base }}_{{ version }}"
-    - name: "{{ type }}_{{ flavor }}_{{ builder }}_{{ base }}"
-      parents:
-        - name: "{{ flavor }}_{{ builder }}_{{ base }}"
+        - name: "{{ builder }}_{{ base }}"
           parents:
-            - name: "{{ flavor }}_{{ builder }}"
-            - name: "{{ flavor }}_{{ base }}"
-        - name: "{{ type }}_{{ flavor }}_{{ builder }}"
+            - name : "{{ builder }}"
+              vars:
+                builder: "{{ builder }}"
+            - name: "{{ base }}"
+              vars:
+                base: "{{ base }}"
+              parents:
+                - name: "base"
+        - name: "{{ base }}_{{ version }}"
           parents:
-            - name: "{{ type }}_{{ flavor }}"
+            - name: "{{ base }}"
+              vars:
+                base: "{{ base }}"
+              parents:
+                - name: "base"
+            - name: "{{ version}}"
+              vars:
+                version: "{{ version }}"
+              parents:
+                - name: "version"
+
 
 layers:
-  type:
-    - runner
   flavor:
-    - terraform
+    - molecule
   builder:
     - docker
+    #- vagrant
   base:
-    - node
+    - ubuntu
   version:
-    - 18
-    - 20
+    - 2004
+    - 2204

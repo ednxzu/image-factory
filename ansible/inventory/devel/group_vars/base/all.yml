@@ -1,0 +1,6 @@
+---
+eol_date: "{{ lookup('ansible.builtin.url', eol_api_full_url) | from_json | json_query('eol') }}"
+
+eol_api_full_url: "{{ eol_api_url }}/{{ eol_api_product }}/{{ eol_api_cycle }}.json"
+eol_api_product: "{{ base }}"
+eol_api_cycle: "{{ version }}"

@@ -1,5 +1,5 @@
 ---
-- name: "Molecule docker ubuntu"
+- name: "Molecule docker debian"
   hosts: "{{ target_host }}"
   gather_facts: true
   become: no
@@ -12,15 +12,9 @@
       ansible.builtin.include_role:
         name: ednxzu.manage_apt_packages
 
-    - name: Comment out imklog in rsyslog.conf
-      ansible.builtin.replace:
-        path: /etc/rsyslog.conf
-        regexp: '^\($ModLoad imklog\)'
-        replace: '#$ModLoad imklog'
-
     - name: "Copy initctl_faker script"
       ansible.builtin.copy:
-        src: "{{ inventory_dir }}/group_files/{{ flavor }}_{{ builder }}_{{ base }}/initctl_faker"
+        src: "{{ factory['root_dir'] }}/ansible/inventory/production/group_files/{{ flavor }}_{{ builder }}_{{ base }}/initctl_faker"
         dest: /initctl_faker
         owner: root
         group: root
@@ -38,9 +32,6 @@
         owner: root
         group: root
         state: link
-
-    - name: "Generate the en_US.UTF-8 locale"
-      ansible.builtin.command: locale-gen en_US.UTF-8
 
     - name: "Include ednxzu.manage_pip_packages"
       ansible.builtin.include_role:
@@ -62,27 +53,15 @@
         group: root
         mode: '0644'
 
-    - name: "Finds files udev targets"
-      ansible.builtin.find:
-        paths: "/lib/systemd/system/"
-        patterns: "systemd*udev*"
-        recurse: yes
-        use_regex: yes
-      register: _udev_targets
-
-    - name: "Debug"
-      ansible.builtin.debug:
-        msg: "{{ _udev_targets.files }}"
-
-    - name: "Remove udev targets"
+    - name: "Allow install of system-wide python packages"
       ansible.builtin.file:
-        path: "{{ item.path }}"
+        path: /usr/lib/python3.11/EXTERNALLY-MANAGED
         state: absent
-      with_items: "{{ _udev_targets.files }}"
+      when: ansible_distribution_major_version == "12"
 
     - name: "Remove getty targets"
       file:
-        path: /lib/systemd/system/getty.target
+        path: /lib/systemd/system/multi-user.target.wants/getty.target
         state: absent
 
     - name: "Include cleanup tasks"

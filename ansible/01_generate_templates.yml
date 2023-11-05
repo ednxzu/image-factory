@@ -29,18 +29,27 @@
 
     - name: "Debug"
       ansible.builtin.debug:
-        msg: "{{ version }}"
+        msg: |
+          {{ {
+            "hostname": inventory_hostname,
+            "end-of-life": eol_date,
+            "build": eol_date > ansible_date_time.iso8601
+          } }}
 
-    - name: "Create build directories in packer/builds"
-      ansible.builtin.file:
-        path: "{{ factory['root_dir'] }}/packer/builds/{{ target_build_name }}"
-        state: directory
-        mode: '0755'
-      delegate_to: localhost
 
-    - name: "Generate build files for docker images"
-      ansible.builtin.template:
-        src: "{{ factory['root_dir'] }}/packer/templates/{{ builder }}/{{ builder }}_build.pkr.hcl.j2"
-        dest: "{{ factory['root_dir'] }}/packer/builds/{{ target_build_name }}/{{ target_build_name }}.pkr.hcl"
-        mode: '0600'
-      delegate_to: localhost
+    - name: "Build packer files and directories"
+      when: eol_date > ansible_date_time.iso8601
+      block:
+        - name: "Create build directories in packer/builds"
+          ansible.builtin.file:
+            path: "{{ factory['root_dir'] }}/packer/builds/{{ target_build_name }}"
+            state: directory
+            mode: '0755'
+          delegate_to: localhost
+
+        - name: "Generate build files for docker images"
+          ansible.builtin.template:
+            src: "{{ factory['root_dir'] }}/packer/templates/{{ builder }}/{{ builder }}_build.pkr.hcl.j2"
+            dest: "{{ factory['root_dir'] }}/packer/builds/{{ target_build_name }}/{{ target_build_name }}.pkr.hcl"
+            mode: '0600'
+          delegate_to: localhost

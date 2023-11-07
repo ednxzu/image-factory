@@ -11,11 +11,34 @@ packer {
   }
 }
 
+locals{
+{% if is_public_build %}
+  credentials_dockerhub = {
+    username = vault("{{ docker_public_registry['credentials']['path'] }}", "{{ docker_public_registry['credentials']['user_value'] }}")
+    password = vault("{{ docker_public_registry['credentials']['path'] }}", "{{ docker_public_registry['credentials']['pass_value'] }}")
+  }
+{% endif %}
+{% if is_private_build %}
+  credentials_gitea = {
+    username = vault("{{ docker_private_registry['credentials']['path'] }}", "{{ docker_private_registry['credentials']['user_value'] }}")
+    password = vault("{{ docker_private_registry['credentials']['path'] }}", "{{ docker_private_registry['credentials']['pass_value'] }}")
+  }
+{% endif %}
+}
+
 source "docker" "{{ inventory_hostname }}" {
   image  = "{{ docker_base_image }}"
   commit = true
   login = false
-  changes = {{ docker_build_changes | to_json }}
+{% if docker_full_commands %}
+  changes = [
+{% for command in docker_full_commands %}
+    {{ command | to_json }},
+{% endfor %}
+  ]
+{% else %}
+  changes = []
+{% endif %}
   run_command = ["-d", "-i", "-t", "--name", "{{ inventory_hostname }}", "{% raw %}{{.Image}}{% endraw %}", "{{ docker_run_command }}"]
 }
 
@@ -48,8 +71,33 @@ build {
     galaxy_force_install = true
   }
 
-  post-processor "docker-tag" {
-    repository = "{{ flavor }}"
-    tags = ["{{ base }}-{{ version }}"]
+{% if is_public_build %}
+  post-processors {
+    post-processor "docker-tag" {
+      repository = "{{ docker_public_registry['server'] }}/{{ docker_public_registry['repository'] }}/{{ flavor }}"
+      tags = ["{{ base }}-{{ version }}"]
+    }
+    post-processor "docker-push" {
+      login = true
+      login_server = "{{ docker_public_registry['server'] }}"
+      login_username = "${local.credentials_dockerhub.username}"
+      login_password = "${local.credentials_dockerhub.password}"
+    }
   }
+
+{% endif %}
+{% if is_private_build %}
+  post-processors {
+    post-processor "docker-tag" {
+      repository = "{{ docker_private_registry['server'] }}/{{ docker_private_registry['repository'] }}/{{ flavor }}"
+      tags = ["{{ base }}-{{ version }}"]
+    }
+    post-processor "docker-push" {
+      login = true
+      login_server = "{{ docker_private_registry['server'] }}"
+      login_username = "${local.credentials_gitea.username}"
+      login_password = "${local.credentials_gitea.password}"
+    }
+  }
+{% endif %}
 }

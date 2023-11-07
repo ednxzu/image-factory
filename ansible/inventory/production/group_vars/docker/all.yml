@@ -1,11 +1,36 @@
 ---
-docker_source_registry: https://hub.docker.com
-docker_target_registry: https://git.ednz.fr/ednz-cloud/image-factory
+is_public_build: false
+docker_public_registry:
+  server: registry.hub.docker.com
+  repository: ednxzu
+  credentials:
+    path: /kv/data/image_factory/credentials_dockerhub
+    user_value: username
+    pass_value: password
+
+is_private_build: true
+docker_private_registry:
+  server: git.ednz.fr
+  repository: ednz-cloud/image-factory
+  credentials:
+    path: /kv/data/image_factory/credentials_gitea
+    user_value: username
+    pass_value: password
+
+docker_full_commands: "{{ [docker_oci_labels,docker_build_changes] | json_query('[]') }}"
+
+docker_oci_labels:
+  - "LABEL org.opencontainers.image.authors={{ factory['author'] }}"
+  - "LABEL org.opencontainers.image.created={{ '%d-%m-%Y' | strftime(ansible_facts.date_time.epoch) }}"
+  - "LABEL org.opencontainers.image.url={{ factory['repository_address'] }}"
+  - "LABEL org.opencontainers.image.documentation={{ factory['repository_address'] }}"
+  - "LABEL org.opencontainers.image.source={{ factory['repository_address'] }}"
+  - "LABEL org.opencontainers.image.version={{ base }}-{{ version }}"
 
 docker_build_changes: []
 
-docker_base_image_publisher: _
+docker_base_image_publisher: library # this is the default path for official docker images
 docker_base_image_name: "{{ base }}"
 docker_base_image_tag: "{{ version }}"
-docker_base_image: "{{ docker_base_image_name }}:{{ docker_base_image_tag }}"
+docker_base_image: "{{ docker_public_registry['server'] }}/{{ docker_base_image_publisher }}/{{ docker_base_image_name }}:{{ docker_base_image_tag }}"
 docker_run_command: "/bin/bash"

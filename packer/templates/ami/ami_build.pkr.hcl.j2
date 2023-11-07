@@ -27,8 +27,8 @@ source "openstack" "{{ inventory_hostname | replace('-','_') | replace('.'~build
   image_visibility          = "{{ image_visibility }}"
   metadata = {
     standard_build = "true"
-    ednz_cloud_eol = "{{ ednz_cloud_eol }}"
-    official_eol   = "{{ official_eol }}"
+    ednz_cloud_eol = "{{ ednz_cloud_eol_date }}"
+    official_eol   = "{{ eol_date }}"
   }
 }
 

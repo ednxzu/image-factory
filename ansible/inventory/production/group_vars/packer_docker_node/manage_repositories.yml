@@ -5,10 +5,14 @@ manage_repositories_main_repo_uri:
   ubuntu: "http://fr.archive.ubuntu.com/ubuntu"
   debian: "http://deb.debian.org/debian"
 manage_repositories_custom_repo:
-  - uri: "https://apt.releases.hashicorp.com"
-    gpg_key: "https://apt.releases.hashicorp.com/gpg"
+  - name: hashicorp
+    uri: "https://apt.releases.hashicorp.com"
     comments: "hashicorp repository"
-    type: "deb"
-    suites: "{{ ansible_distribution_release }}"
-    components: "main"
-    filename: "hashicorp"
+    types:
+      - deb
+    suites:
+      - "{{ ansible_distribution_release }}"
+    components:
+      - main
+    options:
+      Signed-By: "https://apt.releases.hashicorp.com/gpg"

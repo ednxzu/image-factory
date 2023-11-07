@@ -3,7 +3,9 @@ build_group: all  # dummy variables, intended for linting only
 target_host: all  # dummy variables, intended for linting only
 
 factory:
+  author: ednz-cloud
   root_dir: "{{ lookup('env', 'PWD') }}"
+  repository_address: "https://git.ednz.fr/ednz-cloud/image-factory"
 
 packer:
   builder_versions:

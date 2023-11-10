@@ -1,7 +1,10 @@
+import os
 import argparse
 from .functions.general_utils import list_inventories, create_inventory, delete_inventory
 from .functions.ansible_utils import generate_packer_files, test_inventory
 
+ENV_VAR_IMAGE_FACTORY_ENV = "IMAGE_FACTORY_ENV"
+ENV_VAR_IMAGE_FACTORY_INVENTORY = "IMAGE_FACTORY_INVENTORY"
 
 def create_parser():
     parser = argparse.ArgumentParser(
@@ -17,13 +20,15 @@ def create_parser():
 
     # "inventory list" subcommand
     list_parser = inventory_subparsers.add_parser(name="list", help="List all inventories currently in the factory")
+    list_parser.set_defaults(func=list_inventories)
     list_parser.add_argument(
         "--env",
         "-e",
-        required=True,
+        required=False,
         help="The environment to list the inventories from."
     )
-    list_parser.set_defaults(func=list_inventories)
+    if ENV_VAR_IMAGE_FACTORY_ENV in os.environ:
+        list_parser.set_defaults(env=os.environ[ENV_VAR_IMAGE_FACTORY_ENV])
 
     # "inventory test" subcommand
     test_parser = inventory_subparsers.add_parser(
@@ -34,9 +39,11 @@ def create_parser():
     test_parser.add_argument(
         "--env",
         "-e",
-        required=True,
+        required=False,
         help="The environment where the inventory is located"
     )
+    if ENV_VAR_IMAGE_FACTORY_ENV in os.environ:
+        test_parser.set_defaults(env=os.environ[ENV_VAR_IMAGE_FACTORY_ENV])
 
     test_parser.add_argument(
         "--inventory",
@@ -45,6 +52,12 @@ def create_parser():
         nargs="+",
         help="The inventory to generate files from"
     )
+    if ENV_VAR_IMAGE_FACTORY_INVENTORY in os.environ:
+        test_parser.set_defaults(env=[
+            inv
+            for inv in os.environ.get(ENV_VAR_IMAGE_FACTORY_INVENTORY, "").split(",")
+            if inv
+        ])
 
     test_parser.add_argument(
         "--build-group",

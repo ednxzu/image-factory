@@ -1,0 +1,3 @@
+---
+inventory_path: "ansible/inventory"
+generate_playbook_path: "ansible/generate.yml"

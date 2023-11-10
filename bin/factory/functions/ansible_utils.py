@@ -6,7 +6,7 @@ def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
     config = load_config()
     playbook_path = os.path.abspath(playbook_path)
     inventory_path = config.get("inventory_path")
-    env = env
+    env = env or config.get("image_factory_env")
     inventory_file = f"{inventory_path}/{env}/{inventory}.yml"
     command = [
         "ansible-playbook",
@@ -28,20 +28,14 @@ def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
 
 def generate_packer_files(args):
     config = load_config()
-    env = args.env or os.environ.get("IMAGE_FACTORY_ENV", "")
+    env = args.env or config.get("image_factory_env", "")
     inventory = args.inventory
     build_group = args.build_group
 
     if not inventory:
-        inventory = [
-            inv
-            for inv in os.environ.get("IMAGE_FACTORY_INVENTORY", "").split(",")
-            if inv
-        ]
+        inventory = config.get("image_factory_inventory")
 
-    generate_playbook_path = config.get(
-        "generate_playbook_path"
-    )
+    generate_playbook_path = config.get("generate_playbook_path")
 
     if inventory:
         for inv in inventory:
@@ -57,7 +51,9 @@ def generate_packer_files(args):
             )
 
     else:
-        print("Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY.")
+        print(
+            "Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY."
+        )
 
 
 def test_inventory(args):
@@ -67,15 +63,9 @@ def test_inventory(args):
     build_group = args.build_group
 
     if not inventory:
-        inventory = [
-            inv
-            for inv in os.environ.get("IMAGE_FACTORY_INVENTORY", "").split(",")
-            if inv
-        ]
+        inventory = config.get("image_factory_inventory", [])
 
-    test_playbook_path = config.get(
-        "test_playbook_path"
-    )
+    test_playbook_path = config.get("test_playbook_path")
 
     if inventory:
         for inv in inventory:
@@ -91,5 +81,6 @@ def test_inventory(args):
             )
 
     else:
-        print("Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY.")
-
+        print(
+            "Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY."
+        )

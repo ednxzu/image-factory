@@ -1,4 +1,6 @@
 import argparse
+from .functions.general_utils import list_inventories, create_inventory, delete_inventory
+from .functions.ansible_utils import generate_packer_files, test_inventory
 
 
 def create_parser():
@@ -13,21 +15,83 @@ def create_parser():
     )
     inventory_subparsers = inventory_parser.add_subparsers(title="subcommands", dest="inventory_action")
 
-    # "list" subcommand
-    list_parser = inventory_subparsers.add_parser("list", help="List all inventories currently in the factory")
+    # "inventory list" subcommand
+    list_parser = inventory_subparsers.add_parser(name="list", help="List all inventories currently in the factory")
     list_parser.add_argument(
         "--env",
         "-e",
         required=True,
         help="The environment to list the inventories from."
     )
-    # "create" subcommand
+    list_parser.set_defaults(func=list_inventories)
+
+    # "inventory test" subcommand
+    test_parser = inventory_subparsers.add_parser(
+        name="test", help="Test inventory files."
+    )
+    test_parser.set_defaults(func=test_inventory)
+
+    test_parser.add_argument(
+        "--env",
+        "-e",
+        required=True,
+        help="The environment where the inventory is located"
+    )
+
+    test_parser.add_argument(
+        "--inventory",
+        "-i",
+        required=False,
+        nargs="+",
+        help="The inventory to generate files from"
+    )
+
+    test_parser.add_argument(
+        "--build-group",
+        "-g",
+        default="all",
+        required=False,
+        type=str,
+        help="Specify a specific group to target within the inventory file"
+    )
+
+    # "inventory create" subcommand
     create_parser = inventory_subparsers.add_parser("create", help="Create a new inventory")
     create_parser.add_argument("name", help="Name of the inventory to create")
 
-    # "delete" subcommand
+    # "inventory delete" subcommand
     delete_parser = inventory_subparsers.add_parser("delete", help="Delete an inventory")
     delete_parser.add_argument("name", help="Name of the inventory to delete")
+
+    # "generate" subparser
+    generate_parser = subparsers.add_parser(
+        name="generate", help="Generate packer files from a given inventory"
+    )
+    generate_parser.set_defaults(func=generate_packer_files)
+
+    generate_parser.add_argument(
+        "--env",
+        "-e",
+        required=True,
+        help="The environment where the inventory is located"
+    )
+
+    generate_parser.add_argument(
+        "--inventory",
+        "-i",
+        required=False,
+        nargs="+",
+        help="The inventory to generate files from"
+    )
+
+    generate_parser.add_argument(
+        "--build-group",
+        "-g",
+        default="all",
+        required=False,
+        type=str,
+        help="Specify a specific group to target within the inventory file"
+    )
 
     return parser
 

@@ -1,31 +1,95 @@
 import os
-import subprocess
+from factory.utils import load_config, logo_mapping
 
 
-def test_inventory(playbook_path, inventory_path):
-    return
-
-
-def generate_packer_files(playbook_path, inventory_path):
-    return
-
-
-def run_ansible_playbook(playbook_path, inventory_path):
-    # Build the command to run the playbook
+def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
+    config = load_config()
+    playbook_path = os.path.abspath(playbook_path)
+    inventory_path = config.get("inventory_path")
+    env = env
+    inventory_file = f"{inventory_path}/{env}/{inventory}.yml"
     command = [
         "ansible-playbook",
-        playbook_path,
         "-i",
-        inventory_path,
+        inventory_file,
+        playbook_path,
         "-e",
-        "build_group=all",
+        f"build_group={build_group}",
     ]
 
     try:
-        # Run the playbook using subprocess and capture the output
-        result = subprocess.run(command)
+        os.system(" ".join(command))
+    except Exception as e:
+        print(f"Error running Ansible playbook: {e}")
+        return "fail"
 
-        return result.stdout
-    except subprocess.CalledProcessError as e:
-        # Handle playbook execution failure
-        return f"Playbook execution failed: {e.stderr}"
+    return "pass"
+
+
+def generate_packer_files(args):
+    config = load_config()
+    env = args.env or os.environ.get("IMAGE_FACTORY_ENV", "")
+    inventory = args.inventory
+    build_group = args.build_group
+
+    if not inventory:
+        inventory = [
+            inv
+            for inv in os.environ.get("IMAGE_FACTORY_INVENTORY", "").split(",")
+            if inv
+        ]
+
+    generate_playbook_path = config.get(
+        "generate_playbook_path"
+    )
+
+    if inventory:
+        for inv in inventory:
+            status = run_ansible_playbook(
+                inv,
+                playbook_path=generate_playbook_path,
+                build_group=build_group,
+                env=env,
+            )
+            logo = logo_mapping.get(status, "")
+            print(
+                f"Running Ansible generate playbook for inventory '{inv}' with build_group '{build_group}' and environment '{env}': {logo}"
+            )
+
+    else:
+        print("Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY.")
+
+
+def test_inventory(args):
+    config = load_config()
+    env = args.env
+    inventory = args.inventory
+    build_group = args.build_group
+
+    if not inventory:
+        inventory = [
+            inv
+            for inv in os.environ.get("IMAGE_FACTORY_INVENTORY", "").split(",")
+            if inv
+        ]
+
+    test_playbook_path = config.get(
+        "test_playbook_path"
+    )
+
+    if inventory:
+        for inv in inventory:
+            status = run_ansible_playbook(
+                inv,
+                playbook_path=test_playbook_path,
+                build_group=build_group,
+                env=env,
+            )
+            logo = logo_mapping.get(status, "")
+            print(
+                f"Running Ansible test playbook for inventory '{inv}' with build_group '{build_group}' and environment '{env}': {logo}"
+            )
+
+    else:
+        print("Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY.")
+

@@ -2,9 +2,21 @@ import os
 import argparse
 from .functions.general_utils import list_inventories, create_inventory, delete_inventory
 from .functions.ansible_utils import generate_packer_files, test_inventory
+from .functions.vault_utils import vault_login_approle
+from .utils import ENV_VAR_IMAGE_FACTORY_ENV, ENV_VAR_IMAGE_FACTORY_INVENTORY, ENV_VAR_IMAGE_FACTORY_VAULT_APPROLE_ID, ENV_VAR_IMAGE_FACTORY_VAULT_APPROLE_SECRET_ID
 
-ENV_VAR_IMAGE_FACTORY_ENV = "IMAGE_FACTORY_ENV"
-ENV_VAR_IMAGE_FACTORY_INVENTORY = "IMAGE_FACTORY_INVENTORY"
+
+def set_default_string_from_env(parser: argparse.ArgumentParser, env_var: str):
+    if env_var in os.environ:
+        parser.set_defaults(env=os.environ[env_var])
+
+def set_default_list_from_env(parser: argparse.ArgumentParser, env_var: str):
+    if env_var in os.environ:
+        parser.set_defaults(env=[
+            inv
+            for inv in os.environ.get(env_var, "").split(",")
+            if inv
+        ])
 
 def create_parser():
     parser = argparse.ArgumentParser(
@@ -27,8 +39,7 @@ def create_parser():
         required=False,
         help="The environment to list the inventories from."
     )
-    if ENV_VAR_IMAGE_FACTORY_ENV in os.environ:
-        list_parser.set_defaults(env=os.environ[ENV_VAR_IMAGE_FACTORY_ENV])
+    set_default_string_from_env(list_parser, ENV_VAR_IMAGE_FACTORY_ENV)
 
     # "inventory test" subcommand
     test_parser = inventory_subparsers.add_parser(
@@ -42,8 +53,7 @@ def create_parser():
         required=False,
         help="The environment where the inventory is located"
     )
-    if ENV_VAR_IMAGE_FACTORY_ENV in os.environ:
-        test_parser.set_defaults(env=os.environ[ENV_VAR_IMAGE_FACTORY_ENV])
+    set_default_string_from_env(test_parser, ENV_VAR_IMAGE_FACTORY_ENV)
 
     test_parser.add_argument(
         "--inventory",
@@ -52,12 +62,8 @@ def create_parser():
         nargs="+",
         help="The inventory to generate files from"
     )
-    if ENV_VAR_IMAGE_FACTORY_INVENTORY in os.environ:
-        test_parser.set_defaults(env=[
-            inv
-            for inv in os.environ.get(ENV_VAR_IMAGE_FACTORY_INVENTORY, "").split(",")
-            if inv
-        ])
+    set_default_list_from_env(test_parser, ENV_VAR_IMAGE_FACTORY_INVENTORY)
+
 
     test_parser.add_argument(
         "--build-group",
@@ -88,6 +94,7 @@ def create_parser():
         required=True,
         help="The environment where the inventory is located"
     )
+    set_default_string_from_env(generate_parser, ENV_VAR_IMAGE_FACTORY_ENV)
 
     generate_parser.add_argument(
         "--inventory",
@@ -96,6 +103,7 @@ def create_parser():
         nargs="+",
         help="The inventory to generate files from"
     )
+    set_default_list_from_env(generate_parser, ENV_VAR_IMAGE_FACTORY_INVENTORY)
 
     generate_parser.add_argument(
         "--build-group",
@@ -106,41 +114,35 @@ def create_parser():
         help="Specify a specific group to target within the inventory file"
     )
 
-    return parser
+    # "vault" subparser
+    vault_parser = subparsers.add_parser(
+        name="vault", help="Interact with vault to login or logout."
+    )
+    vault_subparsers = vault_parser.add_subparsers(title="subcommands", dest="vault_action")
 
-    # Create subparser for the 'create' subcommand
-    # create_parser = subparsers.add_parser("create", help="Create a test environment")
-    # create_parser.add_argument(
-    #     "--distribution",
-    #     "-d",
-    #     required=True,
-    #     help="Distribution name for the test environment",
-    # )
-    # create_parser.add_argument(
-    #     "--name",
-    #     "-n",
-    #     required=False,
-    #     help="Specify a custom name for the container. If not provided, a random name will be assigned by Docker.",
-    # )
-    # create_parser.add_argument(
-    #     "--shell",
-    #     "-s",
-    #     default="/bin/bash",
-    #     type=str,
-    #     required=False,
-    #     help="Specify a custom shell to execute inside the container. Defaults to /bin/bash",
-    # )
-    # create_parser.add_argument(
-    #     "--connect",
-    #     "-c",
-    #     required=False,
-    #     action="store_true",
-    #     help="Connect to the created environment",
-    # )
-    # create_parser.add_argument(
-    #     "--volume",
-    #     "-v",
-    #     required=False,
-    #     help="Create a storage volume in the specified data path (default ~/.tangent-cli.d/) to share data with the environment.",
-    #     action='store_true'
-    # )
+    # "vault login" subcommand
+    vault_login_parser = vault_subparsers.add_parser(name="login", help="Login to vault using an approle credential.")
+    vault_login_parser.set_defaults(func=vault_login_approle)
+
+    vault_login_parser.add_argument(
+        "--approle-id",
+        "-n",
+        required=True,
+        type=str,
+        help="The approle id to use for login"
+    )
+    set_default_string_from_env(vault_login_parser, ENV_VAR_IMAGE_FACTORY_VAULT_APPROLE_ID)
+
+    vault_login_parser.add_argument(
+        "--approle-secret-id",
+        "-s",
+        required=True,
+        type=str,
+        help="The approle secret id to use for login"
+    )
+    set_default_string_from_env(vault_login_parser, ENV_VAR_IMAGE_FACTORY_VAULT_APPROLE_SECRET_ID)
+
+
+
+
+    return parser

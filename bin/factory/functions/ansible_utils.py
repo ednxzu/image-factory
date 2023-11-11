@@ -1,4 +1,5 @@
 import os
+import subprocess
 from factory.utils import load_config, logo_mapping
 
 
@@ -18,9 +19,8 @@ def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
     ]
 
     try:
-        os.system(" ".join(command))
-    except Exception as e:
-        print(f"Error running Ansible playbook: {e}")
+        subprocess.run(command, check=True)
+    except subprocess.CalledProcessError as e:
         return "fail"
 
     return "pass"

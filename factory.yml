@@ -1,3 +1,7 @@
 ---
+# factory configuration
+vault_addr: https://vault.ednz.fr
 inventory_path: "ansible/inventory"
-generate_playbook_path: "ansible/generate.yml"
+build_path: "packer/builds"
+generate_playbook_path: "ansible/01_generate_templates.yml"
+test_playbook_path: "ansible/02_test.yml"

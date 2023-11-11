@@ -4,15 +4,12 @@ from factory.utils import load_config, logo_mapping
 
 
 def is_in_env_var(inventory, defined_in_env):
-    if inventory in defined_in_env:
-        return "pass"
-    else:
-        return "fail"
+    return "pass" if inventory in defined_in_env else "fail"
 
 
 def list_inventories(args):
     config = load_config()
-    env = args.env or config.get("image_factory_env")
+    env = args.env
 
     if not env:
         print(
@@ -28,7 +25,7 @@ def list_inventories(args):
         print(f"Error: Directory '{inventory_dir}' not found.")
         return
 
-    defined_in_env = config.get("image_factory_inventory", [])
+    defined_in_env = config.get("image_factory_inventory")
 
     files = [f for f in os.listdir(inventory_dir) if f.endswith(".yml")]
 

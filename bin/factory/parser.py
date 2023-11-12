@@ -114,6 +114,13 @@ def create_parser():
         help="Specify a specific group to target within the inventory file"
     )
 
+    generate_parser.add_argument(
+        "--vault-login",
+        "-v",
+        help="Login to vault prior to running the ansible playbook",
+        action="store_true"
+    )
+
     # "vault" subparser
     vault_parser = subparsers.add_parser(
         name="vault", help="Interact with vault to login or logout."

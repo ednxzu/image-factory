@@ -20,7 +20,7 @@ logo_mapping = {
     "pass": f"{Fore.GREEN}✔{Style.RESET_ALL}",
     "fail": f"{Fore.RED}❌{Style.RESET_ALL}",
     "warning": f"{Fore.YELLOW}⚠{Style.RESET_ALL}",
-    "deleted": f"{Fore.RED}🗑️{Style.RESET_ALL},"
+    "deleted": f"{Fore.RED}🗑️{Style.RESET_ALL},,"
 }
 
 
@@ -37,7 +37,15 @@ def load_config():
     config = {**default_config, **loaded_config}
 
     if "vault_addr" not in config:
-        config["vault_addr"] = os.environ.get(ENV_VAR_IMAGE_FACTORY_VAULT_ADDR, "")
+        config["vault_addr"] = os.environ.get(ENV_VAR_IMAGE_FACTORY_VAULT_ADDR, None)
+    if "vault_approle_id" not in config:
+        config["vault_approle_id"] = os.environ.get(
+            ENV_VAR_IMAGE_FACTORY_VAULT_APPROLE_ID, None
+        )
+    if "vault_approle_secret_id" not in config:
+        config["vault_approle_secret_id"] = os.environ.get(
+            ENV_VAR_IMAGE_FACTORY_VAULT_APPROLE_SECRET_ID, None
+        )
 
     # Append values from environment variables
     config["image_factory_env"] = os.environ.get(ENV_VAR_IMAGE_FACTORY_ENV, None)

@@ -1,6 +1,7 @@
 import os
 import subprocess
 from factory.utils import load_config, logo_mapping
+from .vault_utils import vault_login_approle
 
 
 def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
@@ -28,7 +29,14 @@ def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
 
 def generate_packer_files(args):
     config = load_config()
-    env = args.env or config.get("image_factory_env", "")
+    if args.vault_login:
+        vault_login_approle(
+            vault_addr=config["vault_addr"],
+            vault_approle_id=config["vault_approle_id"],
+            vault_approle_secret_id=config["vault_approle_secret_id"],
+        )
+
+    env = args.env or config.get("image_factory_env")
     inventory = args.inventory
     build_group = args.build_group
 
@@ -45,7 +53,7 @@ def generate_packer_files(args):
                 build_group=build_group,
                 env=env,
             )
-            logo = logo_mapping.get(status, "")
+            logo = logo_mapping.get(status)
             print(
                 f"Running Ansible generate playbook for inventory '{inv}' with build_group '{build_group}' and environment '{env}': {logo}"
             )

@@ -10,16 +10,12 @@ from .functions.vault_utils import vault_login_approle
 from .utils import ENV_VAR_IMAGE_FACTORY_ENV, ENV_VAR_IMAGE_FACTORY_INVENTORY
 
 
-def set_default_string_from_env(parser: argparse.ArgumentParser, env_var: str):
+def set_default_from_env(parser: argparse.ArgumentParser, env_var: str, arg_name: str, is_list: bool = False):
     if env_var in os.environ:
-        parser.set_defaults(env=os.environ[env_var])
-
-
-def set_default_list_from_env(parser: argparse.ArgumentParser, env_var: str):
-    if env_var in os.environ:
-        parser.set_defaults(
-            env=[inv for inv in os.environ.get(env_var, "").split(",") if inv]
-        )
+        default_value = os.environ.get(env_var)
+        if is_list:
+            default_value = [item for item in default_value.split(",") if item]
+        parser.set_defaults(**{arg_name: default_value})
 
 
 def create_parser():
@@ -48,7 +44,7 @@ def create_parser():
         required=False,
         help="The environment to list the inventories from.",
     )
-    set_default_string_from_env(list_parser, ENV_VAR_IMAGE_FACTORY_ENV)
+    set_default_from_env(list_parser, ENV_VAR_IMAGE_FACTORY_ENV, "env")
 
     # "inventory test" subcommand
     test_parser = inventory_subparsers.add_parser(
@@ -62,7 +58,7 @@ def create_parser():
         required=False,
         help="The environment where the inventory is located",
     )
-    set_default_string_from_env(test_parser, ENV_VAR_IMAGE_FACTORY_ENV)
+    set_default_from_env(test_parser, ENV_VAR_IMAGE_FACTORY_ENV, "env")
 
     test_parser.add_argument(
         "--inventory",
@@ -71,7 +67,7 @@ def create_parser():
         nargs="+",
         help="The inventory to generate files from",
     )
-    set_default_list_from_env(test_parser, ENV_VAR_IMAGE_FACTORY_INVENTORY)
+    set_default_from_env(test_parser, ENV_VAR_IMAGE_FACTORY_INVENTORY, "inventory", is_list=True)
 
     test_parser.add_argument(
         "--build-group",
@@ -113,7 +109,7 @@ def create_parser():
         required=False,
         help="The environment where the inventory is located",
     )
-    set_default_string_from_env(generate_parser, ENV_VAR_IMAGE_FACTORY_ENV)
+    set_default_from_env(generate_parser, ENV_VAR_IMAGE_FACTORY_ENV, "env")
 
     generate_parser.add_argument(
         "--inventory",
@@ -122,7 +118,7 @@ def create_parser():
         nargs="+",
         help="The inventory to generate files from",
     )
-    set_default_list_from_env(generate_parser, ENV_VAR_IMAGE_FACTORY_INVENTORY)
+    set_default_from_env(generate_parser, ENV_VAR_IMAGE_FACTORY_INVENTORY, "inventory", is_list=True)
 
     generate_parser.add_argument(
         "--build-group",

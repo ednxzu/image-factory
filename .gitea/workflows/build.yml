@@ -36,6 +36,8 @@ jobs:
           IMAGE_FACTORY_INVENTORY: ${{ matrix.build_group }}
           IMAGE_FACTORY_VAULT_APPROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
           IMAGE_FACTORY_VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
+          ANSIBLE_FORCE_COLOR: 'true'
+          ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
 
       - name: Ensure packer files are generated
         run: tree

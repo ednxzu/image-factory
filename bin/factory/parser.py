@@ -110,7 +110,7 @@ def create_parser():
     generate_parser.add_argument(
         "--env",
         "-e",
-        required=True,
+        required=False,
         help="The environment where the inventory is located",
     )
     set_default_string_from_env(generate_parser, ENV_VAR_IMAGE_FACTORY_ENV)

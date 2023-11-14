@@ -36,8 +36,9 @@ def check_token_status(vault_addr: str, vault_token_accessor_id: str):
 
 def display_token_info(headers, data):
     table_data = [[header] + [value] for header, value in zip(headers, data)]
-    table = tabulate(table_data, tablefmt="fancy_grid")
-    print(table)
+    table = tabulate(table_data, tablefmt="grid")
+    print("\n"+table,flush=True)
+
 
 def vault_login_approle(vault_addr, vault_approle_id, vault_approle_secret_id):
     if any(

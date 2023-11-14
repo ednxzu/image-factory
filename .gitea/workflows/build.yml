@@ -31,6 +31,7 @@ jobs:
         shell: bash
         working-directory: ${{ gitea.workspace }}
         env:
+          VAULT_ADDR: https://vault.ednz.fr
           IMAGE_FACTORY_ENV: "production"
           IMAGE_FACTORY_INVENTORY: ${{ matrix.build_group }}
           IMAGE_FACTORY_VAULT_APPROLE_ID: ${{ secrets.VAULT_ROLE_ID }}

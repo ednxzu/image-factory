@@ -8,3 +8,7 @@ venv
 # ignore roles (downloaded at runtime)
 **/roles/*/
 packer/builds/**/
+
+# ignore build files for bin/factory
+bin/build
+bin/factory.egg-info

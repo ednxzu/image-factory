@@ -17,9 +17,7 @@ def list_inventories(args):
         )
         return
 
-    inventory_dir = os.path.join(
-        config.get("inventory_path"), env
-    )
+    inventory_dir = os.path.join(config.get("inventory_path"), env)
 
     if not os.path.exists(inventory_dir):
         print(f"Error: Directory '{inventory_dir}' not found.")
@@ -33,7 +31,9 @@ def list_inventories(args):
         print(f"No inventory files found in '{inventory_dir}'.")
         return
 
-    table_data = [("Inventory Name", "Automatic build")]
+    table_headers = ["Inventory Name", "Automatic build"]
+    table_data = [table_headers]
+
     for f in files:
         inventory_name = f[:-4]
         status = is_in_env_var(inventory_name, defined_in_env)

@@ -27,13 +27,14 @@ jobs:
           path: "${{ gitea.workspace }}/requirements.txt"
 
       - name: Generate packer files
-        run: source build.sh
+        run: factory generate --vault-login
         shell: bash
         working-directory: ${{ gitea.workspace }}
         env:
-          VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
-          VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
-          BUILD_GROUP: ${{ matrix.build_group }}
+          IMAGE_FACTORY_ENV: "production"
+          IMAGE_FACTORY_INVENTORY: ${{ matrix.build_group }}
+          IMAGE_FACTORY_VAULT_APPROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
+          IMAGE_FACTORY_VAULT_APPROLE_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
 
       - name: Ensure packer files are generated
         run: tree

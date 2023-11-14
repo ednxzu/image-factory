@@ -20,7 +20,7 @@ logo_mapping = {
     "pass": f"{Fore.GREEN}✔{Style.RESET_ALL}",
     "fail": f"{Fore.RED}❌{Style.RESET_ALL}",
     "warning": f"{Fore.YELLOW}⚠{Style.RESET_ALL}",
-    "deleted": f"{Fore.RED}🗑️{Style.RESET_ALL},,"
+    "deleted": f"{Fore.RED}🗑️{Style.RESET_ALL}",
 }
 
 

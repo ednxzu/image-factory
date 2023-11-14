@@ -1,7 +1,7 @@
 import os
 import subprocess
 from factory.utils import load_config, logo_mapping
-from .vault_utils import vault_login_approle
+from .vault_utils import vault_login_approle, vault_logout_approle
 
 
 def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
@@ -27,10 +27,20 @@ def run_ansible_playbook(inventory, playbook_path, build_group=None, env=None):
     return "pass"
 
 
+def print_status_message(action, inventory, build_group, env, status):
+    logo = logo_mapping.get(status, "")
+    print(
+        f"{action} Ansible playbook for inventory '{inventory}' "
+        f"with build_group '{build_group}' and environment '{env}': {logo}"
+    )
+
+
 def generate_packer_files(args):
     config = load_config()
+    vault_accessor_id = None
+
     if args.vault_login:
-        vault_login_approle(
+        vault_accessor_id = vault_login_approle(
             vault_addr=config["vault_addr"],
             vault_approle_id=config["vault_approle_id"],
             vault_approle_secret_id=config["vault_approle_secret_id"],
@@ -53,19 +63,31 @@ def generate_packer_files(args):
                 build_group=build_group,
                 env=env,
             )
-            logo = logo_mapping.get(status)
-            print(
-                f"Running Ansible generate playbook for inventory '{inv}' with build_group '{build_group}' and environment '{env}': {logo}"
-            )
+            print_status_message("Running", inv, build_group, env, status)
 
     else:
         print(
-            "Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY."
+            "Error: no inventory specified. "
+            "You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY."
+        )
+
+    if vault_accessor_id:
+        vault_logout_approle(
+            vault_addr=config["vault_addr"], vault_token_accessor_id=vault_accessor_id
         )
 
 
 def test_inventory(args):
     config = load_config()
+    vault_accessor_id = None
+
+    if args.vault_login:
+        vault_accessor_id = vault_login_approle(
+            vault_addr=config["vault_addr"],
+            vault_approle_id=config["vault_approle_id"],
+            vault_approle_secret_id=config["vault_approle_secret_id"],
+        )
+
     env = args.env
     inventory = args.inventory
     build_group = args.build_group
@@ -83,12 +105,15 @@ def test_inventory(args):
                 build_group=build_group,
                 env=env,
             )
-            logo = logo_mapping.get(status, "")
-            print(
-                f"Running Ansible test playbook for inventory '{inv}' with build_group '{build_group}' and environment '{env}': {logo}"
-            )
+            print_status_message("Running", inv, build_group, env, status)
 
     else:
         print(
-            "Error: no inventory specified. You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY."
+            "Error: no inventory specified. "
+            "You need to set the --inventory/-i flag, or set IMAGE_FACTORY_INVENTORY."
+        )
+
+    if vault_accessor_id:
+        vault_logout_approle(
+            vault_addr=config["vault_addr"], vault_token_accessor_id=vault_accessor_id
         )

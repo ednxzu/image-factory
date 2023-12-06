@@ -58,7 +58,7 @@ jobs:
     needs: generate
     strategy:
       matrix:
-        builds: ${{ needs.generate.outputs.prepared_builds }}
+        builds: ${{ fromJSON(needs.generate.outputs.prepared_builds) }}
     steps:
       - env:
           BUILD: ${{ matrix.builds }}

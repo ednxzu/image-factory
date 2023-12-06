@@ -129,7 +129,7 @@ jobs:
     steps:
       - name: Ensure outputs are correct
         run: |
-          echo "packer: ${{ fromJson(needs.read.outputs.result).packer-runner.build_targets }}"
-          echo "molecule: ${{ fromJson(needs.read.outputs.result).packer-runners.build_targets }}"
+          echo "packer: ${{ fromJson(fromJson(needs.read.outputs.result).packer-runner.build_targets) }}"
+          echo "molecule: ${{ fromJson(fromJson(needs.read.outputs.result).packer-runners.build_targets) }}"
         shell: bash
         working-directory: ${{ gitea.workspace }}

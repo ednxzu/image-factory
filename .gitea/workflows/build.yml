@@ -43,9 +43,14 @@ jobs:
 
       - id: gen_output
         name: Ensure packer files are generated
-        run: echo "::set-output name=prepared_builds::$(tree -d -J | jq -r -c '[.[0].contents[].name]')"
+        run: echo "prepared_builds=$(tree -d -J | jq -r -c '[.[0].contents[].name]')" >> "$GITHUB_OUTPUT"
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build_files
+          path: ${{ gitea.workspace }}/packer/builds
 
   Build:
     name: Build
@@ -56,14 +61,13 @@ jobs:
         username: ${{ secrets.ACTIONS_USER }}
         password: ${{ secrets.ACTIONS_TOKEN }}
     needs: generate
-    strategy:
-      matrix:
-        builds: ${{ fromJSON(needs.generate.outputs.prepared_builds) }}
     steps:
-      - env:
-          BUILD: ${{ matrix.builds }}
-        run: echo "$BUILD"
+      - uses: actions/download-artifact@v3
+        with:
+          name: build_files
+          path: ${{ gitea.workspace }}/packer/builds
 
-      - env:
-          BUILDS: ${{ matrix}}
-        run: echo "$BUILDS"
+      - name: Ensure packer files are passed
+        run: tree
+        shell: bash
+        working-directory: ${{ gitea.workspace }}/packer/builds

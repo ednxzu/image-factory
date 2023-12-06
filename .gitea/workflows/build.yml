@@ -56,7 +56,10 @@ jobs:
         username: ${{ secrets.ACTIONS_USER }}
         password: ${{ secrets.ACTIONS_TOKEN }}
     needs: generate
+    strategy:
+      matrix:
+        builds: ${{ fromJson(needs.generate.outputs.prepared_builds) }}
     steps:
       - env:
-          BUILDS: ${{needs.generate.outputs.prepared_builds}}
-        run: echo "$BUILDS"
+          BUILD: ${{ matrix.builds }}
+        run: echo "$BUILD"

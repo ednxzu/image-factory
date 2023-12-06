@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  build:
-    name: Building
+  generate:
+    name: Generate
     runs-on: ubuntu-latest
     container:
       image: git.ednz.fr/container-factory/packer-runner:act-latest
@@ -17,6 +17,8 @@ jobs:
     strategy:
       matrix:
         build_group: [ansible-runners]
+    outputs:
+      prepared_builds: ${{ steps.gen_output.outputs.prepared_builds }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -39,7 +41,22 @@ jobs:
           ANSIBLE_FORCE_COLOR: 'true'
           ANSIBLE_PYTHON_INTERPRETER: /usr/bin/python3
 
-      - name: Ensure packer files are generated
-        run: tree
+      - id: gen_output
+        name: Ensure packer files are generated
+        run: echo "prepared_builds=$(tree -d -J | jq -r -c '[.[0].contents[].name]')" >> "$GITHUB_OUTPUT"
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds
+
+  Build:
+    name: Build
+    runs-on: ubuntu-latest
+    container:
+      image: git.ednz.fr/container-factory/packer-runner:act-latest
+      credentials:
+        username: ${{ secrets.ACTIONS_USER }}
+        password: ${{ secrets.ACTIONS_TOKEN }}
+    needs: generate
+    steps:
+      - env:
+          BUILDS: ${{needs.generate.outputs.prepared_builds}}
+        run: echo "$BUILDS"

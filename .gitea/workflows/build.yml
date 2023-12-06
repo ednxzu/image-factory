@@ -101,8 +101,7 @@ jobs:
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds
 
-  verify:
-    name: Verify
+  read:
     runs-on: ubuntu-latest
     container:
       image: git.ednz.fr/container-factory/packer-runner:act-latest
@@ -115,8 +114,20 @@ jobs:
         id: read
         with:
           matrix-step-name: build
+    outputs:
+      result: "${{ steps.read.outputs.result }}"
 
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    container:
+      image: git.ednz.fr/container-factory/packer-runner:act-latest
+      credentials:
+        username: ${{ secrets.ACTIONS_USER }}
+        password: ${{ secrets.ACTIONS_TOKEN }}
+    needs: read
+    steps:
       - name: Ensure outputs are correct
-        run: echo ${{ steps.read.outputs.result }}
+        run: echo ${{ fromJson(needs.read.outputs.result) }}
         shell: bash
         working-directory: ${{ gitea.workspace }}

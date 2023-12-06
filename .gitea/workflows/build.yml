@@ -16,9 +16,17 @@ jobs:
         password: ${{ secrets.ACTIONS_TOKEN }}
     strategy:
       matrix:
-        build_group: [ansible-runners]
-    outputs:
-      prepared_builds: ${{ steps.gen_output.outputs.prepared_builds }}
+        build_group:
+          - packer-runners
+          - molecule-debian
+          # - standard-runners
+          # - molecule-ubuntu
+          # - terraform-runners
+          # - debian-ami
+          # - ubuntu-ami
+          # - ansible-runners
+          # - renovate-runners
+          # - certbot-runners
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -43,16 +51,24 @@ jobs:
 
       - id: gen_output
         name: Ensure packer files are generated
-        run: echo "prepared_builds=$(tree -d -J | jq -r -c '[.[0].contents[].name]')" >> "$GITHUB_OUTPUT"
+        run: echo "build_targets=$(tree -d -J | jq -r -c '[.[0].contents[].name]')" >> "$GITHUB_OUTPUT"
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds
 
+      - uses: cloudposse/github-action-matrix-outputs-write@main
+        id: out
+        with:
+          matrix-step-name: ${{ gitea.job }}
+          matrix-key: ${{ matrix.build_group }}
+          outputs: |-
+            build_targets: ${{ steps.build.outputs.build_targets }}
+
       - uses: actions/upload-artifact@v3
         with:
-          name: build_files
+          name: build_files_${{ matrix.build_group }}
           path: ${{ gitea.workspace }}/packer/builds
 
-  Build:
+  build:
     name: Build
     runs-on: ubuntu-latest
     container:
@@ -61,13 +77,46 @@ jobs:
         username: ${{ secrets.ACTIONS_USER }}
         password: ${{ secrets.ACTIONS_TOKEN }}
     needs: generate
+    strategy:
+      matrix:
+        build_group:
+          - packer-runners
+          - molecule-debian
+          # - standard-runners
+          # - molecule-ubuntu
+          # - terraform-runners
+          # - debian-ami
+          # - ubuntu-ami
+          # - ansible-runners
+          # - renovate-runners
+          # - certbot-runners
     steps:
       - uses: actions/download-artifact@v3
         with:
-          name: build_files
+          name: build_files_${{ matrix.build_group }}
           path: ${{ gitea.workspace }}/packer/builds
 
       - name: Ensure packer files are passed
         run: tree
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds
+
+  verify:
+    name: Verify
+    runs-on: ubuntu-latest
+    container:
+      image: git.ednz.fr/container-factory/packer-runner:act-latest
+      credentials:
+        username: ${{ secrets.ACTIONS_USER }}
+        password: ${{ secrets.ACTIONS_TOKEN }}
+    needs: build
+    steps:
+      - uses: cloudposse/github-action-matrix-outputs-read@main
+        id: read
+        with:
+          matrix-step-name: build
+
+      - name: Ensure outputs are correct
+        run: echo ${{ steps.read.outputs.result }}
+        shell: bash
+        working-directory: ${{ gitea.workspace }}

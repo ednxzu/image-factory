@@ -44,6 +44,13 @@ def create_parser():
         required=False,
         help="The environment to list the inventories from.",
     )
+    list_parser.add_argument(
+        "--json",
+        "-J",
+        required=False,
+        action="store_true",
+        help="Returns the inventories as a json list.",
+    )
     set_default_from_env(list_parser, ENV_VAR_IMAGE_FACTORY_ENV, "env")
 
     # "inventory test" subcommand

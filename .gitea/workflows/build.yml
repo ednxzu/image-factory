@@ -117,7 +117,7 @@ jobs:
 
       - name: Ensure outputs are correct
         run: |
-          echo "test: ${{ fromJson(steps.read.outputs.result) }}"
+          echo "test: ${{ fromJson(steps.read.outputs.result).molecule-debian.build_targets }}"
         shell: bash
         working-directory: ${{ gitea.workspace }}
     outputs:

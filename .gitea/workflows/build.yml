@@ -58,7 +58,7 @@ jobs:
       - uses: cloudposse/github-action-matrix-outputs-write@main
         id: out
         with:
-          matrix-step-name: ${{ gitea.job }}
+          matrix-step-name: generate
           matrix-key: ${{ matrix.build_group }}
           outputs: |-
             build_targets: ${{ steps.gen_output.outputs.build_targets }}
@@ -131,5 +131,6 @@ jobs:
         run: |
           echo "packer: ${{ fromJson(needs.read.outputs.result).molecule-debian.build_targets }}"
           echo "molecule: ${{ fromJson(needs.read.outputs.result).packer-runners.build_targets }}"
+          echo "${{ gitea.job }}"
         shell: bash
         working-directory: ${{ gitea.workspace }}

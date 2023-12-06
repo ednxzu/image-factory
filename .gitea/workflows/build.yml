@@ -61,7 +61,7 @@ jobs:
           matrix-step-name: ${{ gitea.job }}
           matrix-key: ${{ matrix.build_group }}
           outputs: |-
-            build_targets: ${{ steps.build.outputs.build_targets }}
+            build_targets: ${{ steps.gen_output.outputs.build_targets }}
 
       - uses: actions/upload-artifact@v3
         with:

@@ -114,6 +114,12 @@ jobs:
         id: read
         with:
           matrix-step-name: generate
+
+      - name: Ensure outputs are correct
+        run: |
+          echo "test: ${{ fromJson(needs.read.outputs.result) }}"
+        shell: bash
+        working-directory: ${{ gitea.workspace }}
     outputs:
       result: "${{ steps.read.outputs.result }}"
 

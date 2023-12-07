@@ -113,6 +113,6 @@ jobs:
 
       - name: Ensure outputs are correct
         run: |
-          echo "Builds: ${{ fromJson(steps.read.outputs.result).build_targets[fromJson(steps.set_matrix_build.outputs.matrix_build)] }}"
+          echo "Builds: ${{ fromJson(steps.read.outputs.result).build_targets[steps.set_matrix_build.outputs.matrix_build] }}"
         shell: bash
         working-directory: ${{ gitea.workspace }}

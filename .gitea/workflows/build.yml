@@ -116,8 +116,8 @@ jobs:
 
       - name: Ensure outputs are correct
         run: |
-          echo 'packer: ${{ fromJson(steps.read.outputs.result).build_targets['molecule-debian'] }}'
-          echo 'molecule: ${{ fromJson(steps.read.outputs.result).build_targets['packer-runners'] }}'
+          echo 'packer: ${{ fromJson(steps.read.outputs.result).build_targets['molecule-debian'][0] }}'
+          echo 'molecule: ${{ fromJson(steps.read.outputs.result).build_targets['packer-runners'][0] }}'
           echo "${{ gitea.job }}"
         shell: bash
         working-directory: ${{ gitea.workspace }}

@@ -50,7 +50,7 @@ jobs:
 
       - id: gen_output
         name: Ensure packer files are generated
-        run: echo "build_targets=$(tree -d -J | jq -r -c '[.[0].contents[].name]')" >> "$GITHUB_OUTPUT"
+        run: echo "build_targets=\"$(tree -d -J | jq -r -c '[.[0].contents[].name]')\"" >> "$GITHUB_OUTPUT"
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds
 
@@ -116,8 +116,8 @@ jobs:
 
       - name: Ensure outputs are correct
         run: |
-          echo "packer: ${{ join(fromJson(steps.read.outputs.result).build_targets["molecule-debian"], ', ') }}'"
-          echo "molecule: ${{ join(fromJson(steps.read.outputs.result).build_targets["packer-runners"], ', ') }}'"
+          echo "packer: ${{ fromJson(steps.read.outputs.result).build_targets["molecule-debian"] }}'"
+          echo "molecule: ${{ fromJson(steps.read.outputs.result).build_targets["packer-runners"] }}'"
           echo "${{ gitea.job }}"
         shell: bash
         working-directory: ${{ gitea.workspace }}

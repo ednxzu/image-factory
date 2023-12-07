@@ -102,26 +102,17 @@ jobs:
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds
 
-  read:
-    runs-on: ubuntu-latest
-    container:
-      image: git.ednz.fr/container-factory/packer-runner:act-latest
-      credentials:
-        username: ${{ secrets.ACTIONS_USER }}
-        password: ${{ secrets.ACTIONS_TOKEN }}
-    needs: build
-    steps:
       - uses: cloudposse/github-action-matrix-outputs-read@main
         id: read
         with:
           matrix-step-name: generate
 
+      - name: Set matrix build
+        id: set_matrix_build
+        run: echo "::set-output name=matrix_build::${{ matrix.build }}"
+
       - name: Ensure outputs are correct
         run: |
-          echo "packer: ${{ fromJson(steps.read.outputs.result).build_targets.molecule-debian }}"
-          echo "molecule: ${{ fromJson(steps.read.outputs.result).build_targets.packer-runners }}"
-          echo "${{ gitea.job }}"
+          echo "Builds: ${{ fromJson(steps.read.outputs.result).build_targets[fromJson(steps.set_matrix_build.outputs.matrix_build)] }}"
         shell: bash
         working-directory: ${{ gitea.workspace }}
-    outputs:
-      result: "${{ steps.read.outputs.result }}"

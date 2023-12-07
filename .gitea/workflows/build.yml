@@ -109,7 +109,7 @@ jobs:
 
       - name: Set matrix build
         id: set_matrix_build
-        run: echo "::set-output name=matrix_build::${{ matrix.build }}"
+        run: echo "::set-output name=matrix_build::${{ matrix.build_group }}"
 
       - name: Ensure outputs are correct
         run: |

@@ -51,7 +51,7 @@ jobs:
       - id: gen_output
         name: Ensure packer files are generated
         run: |
-          build_targets=$(tree -d -J | jq -r -c '[.[0].contents[].name]')
+          build_targets=$(tree -d -J | jq -r -c '[.[0].contents[].name]' | sed 's/"//g')
           echo "build_targets=\"$build_targets\"" >> "$GITHUB_OUTPUT"
         shell: bash
         working-directory: ${{ gitea.workspace }}/packer/builds

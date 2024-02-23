@@ -39,3 +39,6 @@ manage_apt_packages_list:
   - name: ansible-lint
     version: latest
     state: present
+  - name: packer
+    version: latest
+    state: present

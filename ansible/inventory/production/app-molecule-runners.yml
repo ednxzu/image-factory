@@ -1,0 +1,48 @@
+---
+plugin: generator
+hosts:
+  name: "{{ application }}_{{ version }}_{{ builder }}_{{ base }}"
+  parents:
+    - name: "{{ application }}_{{ builder }}_{{ base }}"
+      parents:
+        - name: "{{ application }}_{{ builder }}_{{ base.split('_')[0] }}"
+          parents:
+            - name: "{{ application }}_{{ builder }}"
+              parents:
+                - name: "{{ application }}"
+    - name: "{{ builder }}_{{ base }}"
+      parents:
+        - name: "{{ builder }}_{{ base.split('_')[0] }}"
+          parents:
+            - name: "{{ builder }}"
+              vars:
+                builder: "{{ builder }}"
+    - name: "{{ base }}"
+      vars:
+        base: "{{ base }}"
+      parents:
+        - name: "{{ base.split('_')[0] }}"
+          vars:
+            base_name: "{{ base.split('_')[0] }}"
+          parents:
+            - name: base
+    - name: "{{ application }}_{{ version }}"
+      vars:
+        version: "{{ version }}"
+      parents:
+        - name: "{{ application }}"
+          vars:
+            application: "{{ application }}"
+layers:
+  application:
+    - molecule
+  version:
+    - latest
+  base:
+    - ubuntu_2204
+    - ubuntu_2004
+    - debian_12
+    - debian_11
+  builder:
+    - docker
+    # - vagrant

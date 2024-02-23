@@ -1,6 +1,6 @@
 ---
-build_group: all # dummy variables, intended for linting only
-target_host: all # dummy variables, intended for linting only
+build_group: all  # dummy variables, intended for linting only
+target_host: all  # dummy variables, intended for linting only
 
 factory:
   author: ednz-cloud
@@ -14,4 +14,4 @@ packer:
   provisioner_versions:
     ansible: "1.1.0"
 
-default_ansible_playbook: "{{ application }}_{{ builder }}_{{ base_name }}.yml"
+default_ansible_playbook: "{{ flavor }}_{{ builder }}_{{ base }}.yml"

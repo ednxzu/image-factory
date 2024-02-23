@@ -1,0 +1,41 @@
+---
+manage_apt_packages_list:
+  - name: jq
+    version: latest
+    state: present
+  - name: tree
+    version: latest
+    state: present
+  - name: rsync
+    version: latest
+    state: present
+  - name: sshpass
+    version: latest
+    state: present
+  - name: python3-pip
+    version: latest
+    state: present
+  - name: python3-cffi
+    version: latest
+    state: present
+  - name: python3-hvac
+    version: latest
+    state: present
+  - name: python3-mitogen
+    version: latest
+    state: present
+  - name: python3-jmespath
+    version: latest
+    state: present
+  - name: python3-mitogen
+    version: latest
+    state: present
+  - name: yamllint
+    version: latest
+    state: present
+  - name: ansible
+    version: latest
+    state: present
+  - name: ansible-lint
+    version: latest
+    state: present

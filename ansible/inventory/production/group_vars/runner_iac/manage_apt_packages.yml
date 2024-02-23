@@ -6,6 +6,9 @@ manage_apt_packages_list:
   - name: tree
     version: latest
     state: present
+  - name: terraform
+    version: latest
+    state: present
   - name: rsync
     version: latest
     state: present
@@ -37,8 +40,5 @@ manage_apt_packages_list:
     version: latest
     state: present
   - name: ansible-lint
-    version: latest
-    state: present
-  - name: packer
     version: latest
     state: present

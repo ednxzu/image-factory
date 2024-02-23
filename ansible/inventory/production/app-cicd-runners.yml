@@ -20,6 +20,7 @@ hosts:
     - name: "{{ base }}"
       vars:
         base: "{{ base }}"
+        base_version: "{{ base.split('_')[1] }}"
       parents:
         - name: "{{ base.split('_')[0] }}"
           vars:
@@ -36,9 +37,14 @@ hosts:
 
 layers:
   application:
-    - certbot
+    - runner
   version:
-    - latest
+    - certbot
+    - iac
+    - factory
+    - generic
+    - renovate
+    - ansible
   base:
     - node_20
   builder:

@@ -1,16 +1,16 @@
 ---
 - name: Generate templates
-  hosts: "{{ build_group }}"
-  become: no
+  hosts: all
+  become: false
   vars:
-    target_build_name: "{{ flavor }}_{{ builder }}_{{ base }}_{{ version }}"
+    target_build_name: "{{ application }}_{{ version }}_{{ builder }}_{{ base }}"
   tasks:
-    - name: "Gather facts"
+    - name: "Gather facts" # noqa: run-once[task] no-handler
       ansible.builtin.setup:
       delegate_to: localhost
       run_once: true
 
-    - name: "Create /etc/openstack directory"
+    - name: "Create /etc/openstack directory" # noqa: run-once[task] no-handler
       ansible.builtin.file:
         path: "/etc/openstack"
         state: directory
@@ -18,7 +18,7 @@
       delegate_to: localhost
       run_once: true
 
-    - name: "Copy the clouds.yaml config file to /etc/openstack"
+    - name: "Copy the clouds.yaml config file to /etc/openstack" # noqa: run-once[task] no-handler
       ansible.builtin.copy:
         src: "{{ factory['root_dir'] }}/credentials/clouds.yaml"
         dest: /etc/openstack/clouds.yaml

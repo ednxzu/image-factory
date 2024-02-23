@@ -1,10 +1,10 @@
 ---
 # requirements file
 roles:
-  - name: ednxzu.manage_repositories
-  - name: ednxzu.manage_apt_packages
-  - name: ednxzu.manage_pip_packages
-  - name: ednxzu.manage_pipx_packages
-  - name: ednxzu.install_docker
-  - name: ednxzu.import_vault_root_ca
-  - name: ednxzu.provision_management_user
+  - name: ednz_cloud.manage_repositories
+  - name: ednz_cloud.manage_apt_packages
+  - name: ednz_cloud.manage_pip_packages
+  - name: ednz_cloud.manage_pipx_packages
+  - name: ednz_cloud.install_docker
+  - name: ednz_cloud.import_vault_root_ca
+  - name: ednz_cloud.provision_management_user

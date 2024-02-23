@@ -4,7 +4,7 @@ ednz_cloud_eol_date: "{{ '%Y-%m-%d' | strftime(ansible_facts.date_time.epoch | i
 
 eol_api_url: https://endoflife.date/api
 eol_api_full_url: "{{ eol_api_url }}/{{ eol_api_product }}/{{ eol_api_cycle }}.json"
-eol_api_product: "{{ base }}"
-eol_api_cycle: "{{ version }}"
+eol_api_product: "{{ base_name }}"
+eol_api_cycle: "{{ base.split('_')[1] }}"
 
 ednz_cloud_eol_delta_days: 90

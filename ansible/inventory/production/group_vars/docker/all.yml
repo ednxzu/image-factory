@@ -25,12 +25,15 @@ docker_oci_labels:
   - "LABEL org.opencontainers.image.url={{ factory['repository_address'] }}"
   - "LABEL org.opencontainers.image.documentation={{ factory['repository_address'] }}"
   - "LABEL org.opencontainers.image.source={{ factory['repository_address'] }}"
-  - "LABEL org.opencontainers.image.version={{ base }}-{{ version }}"
+  - "LABEL org.opencontainers.image.version={{ version }}-{{ base | regex_replace('_', '') }}"
 
 docker_build_changes: []
 
 docker_base_image_publisher: library # this is the default path for official docker images
-docker_base_image_name: "{{ base }}"
-docker_base_image_tag: "{{ version }}"
+docker_base_image_name: "{{ base_name }}"
+docker_base_image_tag: "{{ base.split('_')[1] }}"
 docker_base_image: "{{ docker_public_registry['server'] }}/{{ docker_base_image_publisher }}/{{ docker_base_image_name }}:{{ docker_base_image_tag }}"
 docker_run_command: "/bin/bash"
+
+docker_target_image_name: "{{ application }}"
+docker_target_image_tag: "{{ version }}-{{ base | regex_replace('_', '') }}"

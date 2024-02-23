@@ -74,8 +74,8 @@ build {
 {% if is_public_build %}
   post-processors {
     post-processor "docker-tag" {
-      repository = "{{ docker_public_registry['server'] }}/{{ docker_public_registry['repository'] }}/{{ flavor }}"
-      tags = ["{{ base }}-{{ version }}"]
+      repository = "{{ docker_public_registry['server'] }}/{{ docker_public_registry['repository'] }}/{{ docker_target_image_name }}"
+      tags = ["{{ docker_target_image_tag }}"]
     }
     post-processor "docker-push" {
       login = true
@@ -89,8 +89,8 @@ build {
 {% if is_private_build %}
   post-processors {
     post-processor "docker-tag" {
-      repository = "{{ docker_private_registry['server'] }}/{{ docker_private_registry['repository'] }}/{{ flavor }}"
-      tags = ["{{ base }}-{{ version }}"]
+      repository = "{{ docker_private_registry['server'] }}/{{ docker_private_registry['repository'] }}/{{ docker_target_image_name }}"
+      tags = ["{{ docker_target_image_tag }}"]
     }
     post-processor "docker-push" {
       login = true
